@@ -147,7 +147,8 @@ export async function updateCard(
   revalidatePath('/');
   revalidatePath('/admin');
   revalidatePath(`/cards/${parsed.data.slug}`);
-  return { error: null };
+  // 保存後はダッシュボードへ戻る
+  redirect('/admin');
 }
 
 export async function deleteCard(cardId: string) {

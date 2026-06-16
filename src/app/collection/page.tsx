@@ -42,18 +42,26 @@ export default async function CollectionPage() {
         )}
       </section>
 
-      {want.length > 0 && (
-        <section className="space-y-3">
-          <h2 className="text-lg font-semibold">
-            欲しいリスト <span className="text-muted">{want.length}</span>
-          </h2>
+      <section className="space-y-3">
+        <h2 className="text-lg font-semibold">
+          欲しいリスト <span className="text-muted">{want.length}</span>
+        </h2>
+        {want.length === 0 ? (
+          <p className="rounded-xl border border-border bg-surface/60 p-8 text-center text-muted">
+            気になるカードは
+            <Link href="/" className="mx-1 text-accent hover:text-accent-soft">
+              一覧
+            </Link>
+            で「欲しい」を付けるとここに集まります。
+          </p>
+        ) : (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {want.map((card) => (
               <CardTile key={card.id} card={card} isLoggedIn />
             ))}
           </div>
-        </section>
-      )}
+        )}
+      </section>
     </div>
   );
 }

@@ -38,7 +38,7 @@ export function OwnToggle({
               : 'border border-border bg-surface-2 text-muted hover:text-foreground'
           }`}
       >
-        {status === 'owned' ? '✓ 所有中' : '所有する'}
+        {status === 'owned' ? '✓ 所有済' : '所有する'}
       </button>
       <button
         type="button"
