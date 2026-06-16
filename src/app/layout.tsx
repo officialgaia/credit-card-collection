@@ -52,7 +52,7 @@ export default function RootLayout({
               </a>
             </nav>
             <p className="mt-8 text-xs text-muted">
-              Card Collection · 年会費・還元率等は公開情報をもとにした目安です
+              Card Collection · 掲載情報は2026年6月時点の参考値です。最新・正確な条件は各公式サイトでご確認ください
             </p>
           </div>
         </footer>
