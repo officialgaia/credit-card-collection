@@ -7,12 +7,11 @@ import { CardTile } from '@/components/card/CardTile';
 import { StatsDashboard } from '@/components/collection/StatsDashboard';
 import { SearchBox } from '@/components/filter/SearchBox';
 import { computeCollectionStats } from '@/lib/cards/stats';
+import { cardMatchesQuery } from '@/lib/cards/search';
 import type { CardWithStatus } from '@/lib/types';
 
 function matchesQuery(card: CardWithStatus, q: string): boolean {
-  if (!q) return true;
-  const t = q.toLowerCase();
-  return card.name.toLowerCase().includes(t) || card.issuer.toLowerCase().includes(t);
+  return cardMatchesQuery(card.name, card.issuer, q);
 }
 
 export default async function CollectionPage({

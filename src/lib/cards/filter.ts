@@ -1,5 +1,6 @@
 import type { CardWithStatus, Brand, Tier } from '@/lib/types';
 import { BRANDS, TIERS } from '@/lib/types';
+import { cardMatchesQuery } from '@/lib/cards/search';
 
 // 特典系のチェックボックス群
 export const FEATURES = [
@@ -138,12 +139,9 @@ export function applyFilters(
   cards: CardWithStatus[],
   f: CardFilters
 ): CardWithStatus[] {
-  const q = f.q.toLowerCase();
   const filtered = cards.filter((card) => {
-    // カード名・発行会社での部分一致検索
-    if (q && !card.name.toLowerCase().includes(q) && !card.issuer.toLowerCase().includes(q)) {
-      return false;
-    }
+    // カード名・発行会社での部分一致検索（かな→ローマ字も考慮）
+    if (f.q && !cardMatchesQuery(card.name, card.issuer, f.q)) return false;
     // ブランド: いずれか1つでも含めばOK
     if (f.brands.length > 0 && !f.brands.some((b) => card.brands.includes(b))) {
       return false;
