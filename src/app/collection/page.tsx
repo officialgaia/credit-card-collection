@@ -3,29 +3,24 @@ import { redirect } from 'next/navigation';
 import { getCardsWithStatus } from '@/lib/cards/queries';
 import { getCurrentUser } from '@/lib/auth';
 import { CardTile } from '@/components/card/CardTile';
-import { CollectionProgress } from '@/components/collection/CollectionProgress';
+import { StatsDashboard } from '@/components/collection/StatsDashboard';
+import { computeCollectionStats } from '@/lib/cards/stats';
 
 export default async function CollectionPage() {
   const user = await getCurrentUser();
   if (!user) redirect('/login');
 
   const cards = await getCardsWithStatus();
+  const stats = computeCollectionStats(cards);
+
   const owned = cards.filter((c) => c.ownStatus === 'owned');
   const want = cards.filter((c) => c.ownStatus === 'want');
-
-  const totalAnnualFee = owned.reduce((sum, c) => sum + c.annual_fee, 0);
-  const priorityPassCount = owned.filter((c) => c.priority_pass !== 'なし').length;
 
   return (
     <div className="space-y-8">
       <h1 className="text-2xl font-semibold tracking-tight">マイコレクション</h1>
 
-      <CollectionProgress
-        ownedCount={owned.length}
-        totalCount={cards.length}
-        totalAnnualFee={totalAnnualFee}
-        priorityPassCount={priorityPassCount}
-      />
+      <StatsDashboard stats={stats} />
 
       <section className="space-y-3">
         <h2 className="text-lg font-semibold">

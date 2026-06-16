@@ -60,6 +60,33 @@ body {
   filter: grayscale(0.85) brightness(0.5) contrast(0.9);
 }
 
+/* コレクションHeroを横切る光のアニメーション */
+.collection-shine {
+  background: linear-gradient(
+    105deg,
+    transparent 35%,
+    rgba(201, 168, 106, 0.12) 48%,
+    rgba(216, 199, 156, 0.22) 52%,
+    transparent 65%
+  );
+  background-size: 220% 100%;
+  animation: collection-shine 6s ease-in-out infinite;
+}
+@keyframes collection-shine {
+  0% {
+    background-position: 180% 0;
+  }
+  60%,
+  100% {
+    background-position: -80% 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .collection-shine {
+    animation: none;
+  }
+}
+
 /* 所有カードの光沢ハイライト */
 .owned-sheen::after {
   content: "";
