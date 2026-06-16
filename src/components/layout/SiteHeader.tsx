@@ -22,12 +22,20 @@ export async function SiteHeader() {
             一覧
           </Link>
           {profile && (
-            <Link
-              href="/collection"
-              className="rounded-md px-3 py-1.5 text-muted transition hover:text-foreground"
-            >
-              マイコレクション
-            </Link>
+            <>
+              <Link
+                href="/wallet"
+                className="rounded-md px-3 py-1.5 text-muted transition hover:text-foreground"
+              >
+                財布
+              </Link>
+              <Link
+                href="/collection"
+                className="rounded-md px-3 py-1.5 text-muted transition hover:text-foreground"
+              >
+                コレクション
+              </Link>
+            </>
           )}
           {profile?.is_admin && (
             <Link

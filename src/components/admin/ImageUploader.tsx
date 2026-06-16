@@ -15,9 +15,30 @@ export function ImageUploader({
   initialUrl: string | null;
 }) {
   const [url, setUrl] = useState<string | null>(initialUrl);
+  const [urlInput, setUrlInput] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [, startTransition] = useTransition();
+
+  function onSetUrl() {
+    const value = urlInput.trim();
+    if (!value) return;
+    if (!/^https?:\/\//i.test(value)) {
+      setError('http(s) で始まる画像URLを入力してください');
+      return;
+    }
+    setError(null);
+    setBusy(true);
+    startTransition(async () => {
+      const res = await setCardImage(cardId, value);
+      if (res?.error) setError(res.error);
+      else {
+        setUrl(value);
+        setUrlInput('');
+      }
+      setBusy(false);
+    });
+  }
 
   async function onSelect(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -94,6 +115,31 @@ export function ImageUploader({
             画像を削除
           </button>
         )}
+      </div>
+
+      {/* 画像URLを直接指定して設定する */}
+      <div className="space-y-1.5 border-t border-border pt-3">
+        <p className="text-xs text-muted">または画像URLを貼り付けて設定</p>
+        <div className="flex gap-2">
+          <input
+            type="url"
+            value={urlInput}
+            onChange={(e) => setUrlInput(e.target.value)}
+            placeholder="https://example.com/card.png"
+            className="flex-1 rounded-md border border-border bg-surface-2 px-3 py-1.5 text-sm outline-none focus:border-accent"
+          />
+          <button
+            type="button"
+            onClick={onSetUrl}
+            disabled={busy || !urlInput.trim()}
+            className="rounded-md border border-border bg-surface-2 px-3 py-1.5 text-sm transition hover:text-accent-soft disabled:opacity-50"
+          >
+            設定
+          </button>
+        </div>
+        <p className="text-[11px] text-muted">
+          ※ 外部URLを使う場合は next.config の画像ドメイン許可が必要なことがあります（Storageアップロード推奨）。
+        </p>
       </div>
 
       {error && <p className="text-sm text-red-400">{error}</p>}
