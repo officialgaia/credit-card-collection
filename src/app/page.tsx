@@ -1,18 +1,38 @@
+import { Suspense } from 'react';
 import { getCardsWithStatus } from '@/lib/cards/queries';
 import { getCurrentUser } from '@/lib/auth';
 import { CardTile } from '@/components/card/CardTile';
 import { CollectionProgress } from '@/components/collection/CollectionProgress';
+import { FilterBar } from '@/components/filter/FilterBar';
+import { parseFilters, applyFilters } from '@/lib/cards/filter';
 
-export default async function HomePage() {
-  const [cards, user] = await Promise.all([getCardsWithStatus(), getCurrentUser()]);
+export default async function HomePage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const [cards, user, sp] = await Promise.all([
+    getCardsWithStatus(),
+    getCurrentUser(),
+    searchParams,
+  ]);
   const isLoggedIn = !!user;
 
+  const filters = parseFilters(sp);
+  const visible = applyFilters(cards, filters);
+
+  // 発行会社の一覧（重複排除・五十音順）
+  const allIssuers = [...new Set(cards.map((c) => c.issuer))].sort((a, b) =>
+    a.localeCompare(b, 'ja')
+  );
+
+  // 収集サマリは全カードに対する所有状況（フィルタの影響を受けない）
   const owned = cards.filter((c) => c.ownStatus === 'owned');
   const totalAnnualFee = owned.reduce((sum, c) => sum + c.annual_fee, 0);
   const priorityPassCount = owned.filter((c) => c.priority_pass !== 'なし').length;
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <div className="space-y-2">
         <h1 className="text-2xl font-semibold tracking-tight">
           クレジットカード コレクション
@@ -31,16 +51,26 @@ export default async function HomePage() {
         />
       )}
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {cards.map((card) => (
-          <CardTile key={card.id} card={card} isLoggedIn={isLoggedIn} />
-        ))}
-      </div>
+      <Suspense fallback={null}>
+        <FilterBar
+          allIssuers={allIssuers}
+          showOwnership={isLoggedIn}
+          resultCount={visible.length}
+        />
+      </Suspense>
 
-      {cards.length === 0 && (
+      {visible.length === 0 ? (
         <p className="rounded-xl border border-border bg-surface/60 p-8 text-center text-muted">
-          カードがまだありません。シードデータを投入してください（README 参照）。
+          {cards.length === 0
+            ? 'カードがまだありません。シードデータを投入してください（README 参照）。'
+            : '条件に合うカードがありません。フィルタを緩めてみてください。'}
         </p>
+      ) : (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {visible.map((card) => (
+            <CardTile key={card.id} card={card} isLoggedIn={isLoggedIn} />
+          ))}
+        </div>
       )}
     </div>
   );
