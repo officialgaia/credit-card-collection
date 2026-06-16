@@ -37,6 +37,24 @@ export async function getCardsWithStatus(): Promise<CardWithStatus[]> {
   }));
 }
 
+// 管理画面用: 全カードを取得（所有状態は不要）
+export async function getAllCards(): Promise<Card[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from('cards')
+    .select('*')
+    .order('created_at', { ascending: false });
+  if (error) throw error;
+  return (data ?? []) as Card[];
+}
+
+// 管理画面用: id で1枚取得
+export async function getCardById(id: string): Promise<Card | null> {
+  const supabase = await createClient();
+  const { data } = await supabase.from('cards').select('*').eq('id', id).maybeSingle();
+  return (data as Card) ?? null;
+}
+
 // slug で1枚取得（詳細ページ用）
 export async function getCardBySlug(slug: string): Promise<CardWithStatus | null> {
   const supabase = await createClient();
