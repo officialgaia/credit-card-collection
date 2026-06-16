@@ -710,3 +710,14 @@ values
    '満20歳以上の法人代表者・個人事業主', 'https://www.smbc-card.com/')
 
 on conflict (slug) do nothing;
+
+
+-- ===== ビジネスカード区分の付与（0004_business.sql と整合） =====
+alter table public.cards add column if not exists business boolean not null default false;
+update public.cards set business = true
+where slug in (
+  'saison-cobalt-business-amex',
+  'saison-platinum-business-amex',
+  'smbc-business-owners',
+  'smbc-business-owners-gold'
+);

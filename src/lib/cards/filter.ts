@@ -50,6 +50,7 @@ export interface CardFilters {
   rateMin: number | null;
   pp: PPFilter | null;
   features: Feature[];
+  business: boolean;
   own: OwnFilter | null;
   sort: SortKey;
 }
@@ -64,6 +65,7 @@ export const EMPTY_FILTERS: CardFilters = {
   rateMin: null,
   pp: null,
   features: [],
+  business: false,
   own: null,
   sort: DEFAULT_SORT,
 };
@@ -111,6 +113,7 @@ export function parseFilters(sp: SP): CardFilters {
     rateMin: rateMinRaw != null && rateMinRaw !== '' ? Number(rateMinRaw) : null,
     pp: ppRaw === 'has' || ppRaw === 'prestige' ? ppRaw : null,
     features,
+    business: first(sp.business) === '1',
     own:
       ownRaw === 'owned' || ownRaw === 'want' || ownRaw === 'none' ? ownRaw : null,
     sort: SORT_OPTIONS.some((o) => o.value === sortRaw) ? (sortRaw as SortKey) : DEFAULT_SORT,
@@ -161,6 +164,8 @@ export function applyFilters(
       return false;
     }
 
+    if (f.business && !card.business) return false;
+
     if (f.own === 'owned' && card.ownStatus !== 'owned') return false;
     if (f.own === 'want' && card.ownStatus !== 'want') return false;
     if (f.own === 'none' && card.ownStatus !== null) return false;
@@ -203,6 +208,7 @@ export function hasActiveFilters(f: CardFilters): boolean {
     f.rateMin != null ||
     f.pp != null ||
     f.features.length > 0 ||
+    f.business ||
     f.own != null
   );
 }

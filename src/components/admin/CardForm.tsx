@@ -155,6 +155,7 @@ export function CardForm({
           <Toggle name="concierge" label="コンシェルジュ" checked={card?.concierge} />
           <Toggle name="touch_payment" label="タッチ決済" checked={card?.touch_payment} />
           <Toggle name="numberless" label="ナンバーレス" checked={card?.numberless} />
+          <Toggle name="business" label="ビジネスカード" checked={card?.business} />
         </div>
       </Section>
 

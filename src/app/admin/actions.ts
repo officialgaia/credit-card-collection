@@ -53,6 +53,7 @@ const cardSchema = z.object({
   concierge: z.boolean(),
   touch_payment: z.boolean(),
   numberless: z.boolean(),
+  business: z.boolean(),
   eligibility: z.string().nullable(),
   official_url: z.string().nullable(),
 });
@@ -91,6 +92,7 @@ function parseCardForm(formData: FormData, fallbackName = '') {
     concierge: bool('concierge'),
     touch_payment: bool('touch_payment'),
     numberless: bool('numberless'),
+    business: bool('business'),
     eligibility: str('eligibility'),
     official_url: str('official_url'),
   });

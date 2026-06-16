@@ -47,6 +47,7 @@ export interface Card {
   concierge: boolean;
   touch_payment: boolean;
   numberless: boolean;
+  business: boolean;
   eligibility: string | null;
   official_url: string | null;
   image_url: string | null;

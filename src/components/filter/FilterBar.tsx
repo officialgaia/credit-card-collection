@@ -117,6 +117,7 @@ export function FilterBar({
   const sort = get('sort') ?? DEFAULT_SORT;
   const pp = get('pp');
   const own = get('own');
+  const business = get('business') === '1';
 
   return (
     <section className="rounded-2xl border border-border bg-surface/60">
@@ -246,6 +247,16 @@ export function FilterBar({
                 {FEATURE_LABELS[ft]}
               </Chip>
             ))}
+          </FilterGroup>
+
+          {/* 種別 */}
+          <FilterGroup title="種別">
+            <Chip
+              active={business}
+              onClick={() => apply({ business: business ? null : '1' })}
+            >
+              ビジネスカード
+            </Chip>
           </FilterGroup>
 
           {/* 所有状態（ログイン時のみ） */}
