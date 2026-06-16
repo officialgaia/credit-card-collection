@@ -8,16 +8,13 @@ import { CardFace } from '@/components/card/CardFace';
 import { formatYen, formatRate } from '@/lib/cards/style';
 
 // 所有カードを Apple Pay のウォレットのように重ねて表示する。
-// カードをクリックすると拡大表示（モーダル）になる。
-const PEEK = 0.34; // カード高さに対する見え幅の割合（小さいほど密に重なる）
+// カードをクリックすると拡大モーダルで表示する。
+// 重なり量はコンテナ幅に対する割合（%）で指定するため、画面幅に追従する。
+const OVERLAP = 42; // 直前のカードに重ねる量（幅に対する%）
 
 export function WalletStack({ cards }: { cards: Card[] }) {
   const [active, setActive] = useState<number | null>(null); // ホバー中
   const [expanded, setExpanded] = useState<number | null>(null); // 拡大中
-
-  const n = cards.length;
-  const factor = 1 + Math.max(0, n - 1) * PEEK;
-  const aspectRatio = 1.586 / factor;
 
   // Esc で拡大を閉じる
   useEffect(() => {
@@ -33,10 +30,9 @@ export function WalletStack({ cards }: { cards: Card[] }) {
 
   return (
     <div className="mx-auto w-full max-w-sm">
-      <div className="grid w-full" style={{ aspectRatio }}>
+      <div className="flex flex-col">
         {cards.map((c, i) => {
           const lifted = active === i;
-          const shift = i * PEEK * 100 - (lifted ? 6 : 0);
           return (
             <button
               key={c.id}
@@ -45,8 +41,13 @@ export function WalletStack({ cards }: { cards: Card[] }) {
               onMouseEnter={() => setActive(i)}
               onMouseLeave={() => setActive((cur) => (cur === i ? null : cur))}
               aria-label={`${c.name} を拡大`}
-              className="[grid-area:1/1] block w-full cursor-pointer rounded-xl outline-none transition-transform duration-200 ease-out focus-visible:ring-2 focus-visible:ring-accent"
-              style={{ transform: `translateY(${shift}%)`, zIndex: lifted ? 100 : i + 1 }}
+              className="block w-full rounded-xl outline-none transition-transform duration-200 ease-out focus-visible:ring-2 focus-visible:ring-accent"
+              style={{
+                position: 'relative',
+                marginTop: i === 0 ? 0 : `-${OVERLAP}%`,
+                zIndex: lifted ? 100 : i + 1,
+                transform: lifted ? 'translateY(-5%)' : undefined,
+              }}
             >
               <div
                 className={`owned-sheen relative ${
@@ -67,47 +68,49 @@ export function WalletStack({ cards }: { cards: Card[] }) {
       {/* 拡大モーダル */}
       {card && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm"
+          className="fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-sm"
           onClick={() => setExpanded(null)}
         >
-          <div
-            className="wallet-pop w-full max-w-md space-y-4"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="owned-sheen relative">
-              <CardFace card={card} />
-            </div>
-
-            <div className="rounded-2xl border border-border bg-surface p-4">
-              <p className="text-xs text-muted">{card.issuer}</p>
-              <h2 className="text-lg font-semibold">{card.name}</h2>
-              <div className="mt-3 grid grid-cols-2 gap-y-2 text-sm">
-                <span className="text-muted">ランク</span>
-                <span className="text-right">{card.tier}</span>
-                <span className="text-muted">年会費</span>
-                <span className="text-right">{formatYen(card.annual_fee)}</span>
-                <span className="text-muted">還元率</span>
-                <span className="text-right">{formatRate(card.base_reward_rate)}</span>
-                <span className="text-muted">ブランド</span>
-                <span className="text-right">
-                  {card.brands.map((b) => BRAND_LABELS[b]).join(' / ') || '—'}
-                </span>
+          <div className="flex min-h-full items-center justify-center p-4">
+            <div
+              className="wallet-pop w-full max-w-sm space-y-4"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="owned-sheen relative">
+                <CardFace card={card} />
               </div>
 
-              <div className="mt-4 flex items-center justify-between">
-                <Link
-                  href={`/cards/${card.slug}`}
-                  className="text-sm text-accent hover:text-accent-soft"
-                >
-                  詳細を見る →
-                </Link>
-                <button
-                  type="button"
-                  onClick={() => setExpanded(null)}
-                  className="rounded-md border border-border px-3 py-1.5 text-sm text-muted transition hover:text-foreground"
-                >
-                  閉じる
-                </button>
+              <div className="rounded-2xl border border-border bg-surface p-4">
+                <p className="text-xs text-muted">{card.issuer}</p>
+                <h2 className="text-lg font-semibold">{card.name}</h2>
+                <div className="mt-3 grid grid-cols-2 gap-y-2 text-sm">
+                  <span className="text-muted">ランク</span>
+                  <span className="text-right">{card.tier}</span>
+                  <span className="text-muted">年会費</span>
+                  <span className="text-right">{formatYen(card.annual_fee)}</span>
+                  <span className="text-muted">還元率</span>
+                  <span className="text-right">{formatRate(card.base_reward_rate)}</span>
+                  <span className="text-muted">ブランド</span>
+                  <span className="text-right">
+                    {card.brands.map((b) => BRAND_LABELS[b]).join(' / ') || '—'}
+                  </span>
+                </div>
+
+                <div className="mt-4 flex items-center justify-between">
+                  <Link
+                    href={`/cards/${card.slug}`}
+                    className="text-sm text-accent hover:text-accent-soft"
+                  >
+                    詳細を見る →
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => setExpanded(null)}
+                    className="rounded-md border border-border px-3 py-1.5 text-sm text-muted transition hover:text-foreground"
+                  >
+                    閉じる
+                  </button>
+                </div>
               </div>
             </div>
           </div>
