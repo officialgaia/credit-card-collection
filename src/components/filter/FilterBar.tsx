@@ -102,9 +102,15 @@ export function FilterBar({
   }, [rateMin]);
 
   const clearAll = () => {
+    // 並び替えと検索語は維持し、絞り込み条件のみクリアする
+    const keep = new URLSearchParams();
     const sort = get('sort');
+    const q = get('q');
+    if (sort) keep.set('sort', sort);
+    if (q) keep.set('q', q);
+    const qs = keep.toString();
     startTransition(() => {
-      router.replace(sort ? `${pathname}?sort=${sort}` : pathname, { scroll: false });
+      router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
     });
   };
 

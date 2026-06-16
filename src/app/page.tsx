@@ -4,6 +4,7 @@ import { getCurrentUser } from '@/lib/auth';
 import { CardTile } from '@/components/card/CardTile';
 import { CollectionProgress } from '@/components/collection/CollectionProgress';
 import { FilterBar } from '@/components/filter/FilterBar';
+import { SearchBox } from '@/components/filter/SearchBox';
 import { parseFilters, applyFilters } from '@/lib/cards/filter';
 
 export default async function HomePage({
@@ -25,6 +26,7 @@ export default async function HomePage({
   const allIssuers = [...new Set(cards.map((c) => c.issuer))].sort((a, b) =>
     a.localeCompare(b, 'ja')
   );
+  const suggestions = cards.map((c) => ({ name: c.name, slug: c.slug, issuer: c.issuer }));
 
   // 収集サマリは全カードに対する所有状況（フィルタの影響を受けない）
   const owned = cards.filter((c) => c.ownStatus === 'owned');
@@ -50,6 +52,10 @@ export default async function HomePage({
           priorityPassCount={priorityPassCount}
         />
       )}
+
+      <Suspense fallback={null}>
+        <SearchBox suggestions={suggestions} />
+      </Suspense>
 
       <Suspense fallback={null}>
         <FilterBar

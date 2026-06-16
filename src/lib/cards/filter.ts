@@ -40,6 +40,7 @@ export const FEE_MAX = 165000;
 export const RATE_MAX = 2;
 
 export interface CardFilters {
+  q: string;
   brands: Brand[];
   issuers: string[];
   tiers: Tier[];
@@ -53,6 +54,7 @@ export interface CardFilters {
 }
 
 export const EMPTY_FILTERS: CardFilters = {
+  q: '',
   brands: [],
   issuers: [],
   tiers: [],
@@ -99,6 +101,7 @@ export function parseFilters(sp: SP): CardFilters {
   const sortRaw = first(sp.sort) as SortKey | undefined;
 
   return {
+    q: (first(sp.q) ?? '').trim(),
     brands,
     issuers: splitList(sp.issuer),
     tiers,
@@ -135,7 +138,12 @@ export function applyFilters(
   cards: CardWithStatus[],
   f: CardFilters
 ): CardWithStatus[] {
+  const q = f.q.toLowerCase();
   const filtered = cards.filter((card) => {
+    // カード名・発行会社での部分一致検索
+    if (q && !card.name.toLowerCase().includes(q) && !card.issuer.toLowerCase().includes(q)) {
+      return false;
+    }
     // ブランド: いずれか1つでも含めばOK
     if (f.brands.length > 0 && !f.brands.some((b) => card.brands.includes(b))) {
       return false;
@@ -188,6 +196,7 @@ export function applyFilters(
 // フィルタが1つでもかかっているか（並び替えは除く）
 export function hasActiveFilters(f: CardFilters): boolean {
   return (
+    f.q.length > 0 ||
     f.brands.length > 0 ||
     f.issuers.length > 0 ||
     f.tiers.length > 0 ||
