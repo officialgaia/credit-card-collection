@@ -3,6 +3,11 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
+import { validatePassword } from '@/lib/validation';
+
+function siteUrl() {
+  return process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
+}
 
 export async function login(_prevState: unknown, formData: FormData) {
   const email = String(formData.get('email') ?? '');
@@ -24,15 +29,19 @@ export async function signup(_prevState: unknown, formData: FormData) {
   const password = String(formData.get('password') ?? '');
   const displayName = String(formData.get('display_name') ?? '');
 
-  if (password.length < 6) {
-    return { error: 'パスワードは6文字以上で入力してください。' };
+  const pwError = validatePassword(password);
+  if (pwError) {
+    return { error: pwError };
   }
 
   const supabase = await createClient();
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
-    options: { data: { display_name: displayName || undefined } },
+    options: {
+      data: { display_name: displayName || undefined },
+      emailRedirectTo: `${siteUrl()}/auth/callback`,
+    },
   });
 
   if (error) {
@@ -49,6 +58,23 @@ export async function signup(_prevState: unknown, formData: FormData) {
 
   revalidatePath('/', 'layout');
   redirect('/');
+}
+
+// パスワード再設定メールを送る。メール存在の有無は返さない（列挙攻撃対策）。
+export async function requestPasswordReset(_prevState: unknown, formData: FormData) {
+  const email = String(formData.get('email') ?? '');
+  if (!email) return { error: 'メールアドレスを入力してください。' };
+
+  const supabase = await createClient();
+  await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${siteUrl()}/auth/callback?next=/reset-password`,
+  });
+
+  return {
+    error: null,
+    message:
+      'パスワード再設定用のメールを送信しました（ご登録がある場合）。メール内のリンクから手続きを続けてください。',
+  };
 }
 
 export async function signout() {
