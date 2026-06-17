@@ -14,7 +14,12 @@ export async function GET(request: Request) {
     if (!error) {
       return NextResponse.redirect(`${origin}${next}`);
     }
+    return NextResponse.redirect(
+      `${origin}/login?error=${encodeURIComponent(error.message)}`
+    );
   }
 
-  return NextResponse.redirect(`${origin}/login?error=auth`);
+  // code が無い場合（パラメータ確認用）
+  const errParam = searchParams.get('error_description') || searchParams.get('error') || 'no_code';
+  return NextResponse.redirect(`${origin}/login?error=${encodeURIComponent(errParam)}`);
 }
