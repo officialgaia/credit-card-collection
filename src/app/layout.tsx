@@ -51,8 +51,15 @@ export default function RootLayout({
               <a href="/contact" className="text-muted transition hover:text-foreground">
                 お問い合わせ
               </a>
+              <span className="text-border" aria-hidden="true">/</span>
+              <a href="/operator" className="text-muted transition hover:text-foreground">
+                運営者情報
+              </a>
             </nav>
-            <p className="mt-8 text-xs text-muted">
+            <p className="mt-6 text-xs text-muted">
+              当サイトはアフィリエイト広告を利用しています。
+            </p>
+            <p className="mt-2 text-xs text-muted">
               Card Collection · 掲載情報は2026年6月時点の参考値です。最新・正確な条件は各公式サイトでご確認ください
             </p>
           </div>
