@@ -56,6 +56,7 @@ const cardSchema = z.object({
   business: z.boolean(),
   eligibility: z.string().nullable(),
   official_url: z.string().nullable(),
+  affiliate_url: z.string().nullable(),
 });
 
 // FormData → 検証済みのカードデータ
@@ -95,6 +96,7 @@ function parseCardForm(formData: FormData, fallbackName = '') {
     business: bool('business'),
     eligibility: str('eligibility'),
     official_url: str('official_url'),
+    affiliate_url: str('affiliate_url'),
   });
 }
 

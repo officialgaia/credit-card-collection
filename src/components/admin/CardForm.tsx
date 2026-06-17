@@ -178,6 +178,15 @@ export function CardForm({
             className={input}
           />
         </Field>
+        <Field label="アフィリエイトURL（設定すると申込ボタンに「広告」表記で優先使用）">
+          <input
+            type="url"
+            name="affiliate_url"
+            defaultValue={card?.affiliate_url ?? ''}
+            placeholder="https://（ASPの計測リンク）"
+            className={input}
+          />
+        </Field>
       </Section>
 
       {state?.error && <p className="text-sm text-red-400">{state.error}</p>}

@@ -50,6 +50,7 @@ export interface Card {
   business: boolean;
   eligibility: string | null;
   official_url: string | null;
+  affiliate_url: string | null;
   image_url: string | null;
   created_at: string;
   updated_at: string;

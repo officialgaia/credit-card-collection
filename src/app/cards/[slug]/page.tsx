@@ -52,15 +52,27 @@ export default async function CardDetailPage({
               ログインして所有チェック
             </Link>
           )}
-          {card.official_url && (
-            <a
-              href={card.official_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block rounded-md bg-accent px-2 py-2 text-center text-sm font-medium text-black transition hover:bg-accent-soft"
-            >
-              公式サイトを見る ↗
-            </a>
+          {(card.affiliate_url || card.official_url) && (
+            <div className="space-y-1.5">
+              <a
+                href={card.affiliate_url || card.official_url || '#'}
+                target="_blank"
+                rel={card.affiliate_url ? 'sponsored noopener noreferrer' : 'noopener noreferrer'}
+                className="block rounded-md bg-accent px-2 py-2 text-center text-sm font-semibold text-black transition hover:bg-accent-soft"
+              >
+                {card.affiliate_url ? '公式サイトで申し込む ↗' : '公式サイトを見る ↗'}
+                {card.affiliate_url && (
+                  <span className="ml-2 rounded bg-black/20 px-1.5 py-0.5 text-[10px] align-middle">
+                    広告
+                  </span>
+                )}
+              </a>
+              {card.affiliate_url && (
+                <p className="text-[11px] text-muted">
+                  ※ 当リンクは広告（アフィリエイト）を含みます。
+                </p>
+              )}
+            </div>
           )}
         </div>
 
