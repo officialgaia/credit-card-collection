@@ -1,0 +1,25 @@
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="card" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#e7d29a"/>
+      <stop offset="0.5" stop-color="#c9a86a"/>
+      <stop offset="1" stop-color="#9c7a40"/>
+    </linearGradient>
+    <linearGradient id="chip" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f0e2b6"/>
+      <stop offset="1" stop-color="#b08a45"/>
+    </linearGradient>
+  </defs>
+  <!-- カード本体 -->
+  <rect x="2.5" y="6.5" width="27" height="19" rx="3.2" fill="url(#card)"/>
+  <rect x="2.5" y="6.5" width="27" height="19" rx="3.2" fill="none" stroke="#7d602f" stroke-opacity="0.5" stroke-width="0.8"/>
+  <!-- 磁気ストライプ -->
+  <rect x="2.5" y="10" width="27" height="3.4" fill="#1b1b20"/>
+  <!-- ICチップ -->
+  <rect x="6" y="16" width="6.2" height="5" rx="1.1" fill="url(#chip)" stroke="#7d602f" stroke-opacity="0.6" stroke-width="0.5"/>
+  <line x1="9.1" y1="16" x2="9.1" y2="21" stroke="#7d602f" stroke-opacity="0.5" stroke-width="0.5"/>
+  <line x1="6" y1="18.5" x2="12.2" y2="18.5" stroke="#7d602f" stroke-opacity="0.5" stroke-width="0.5"/>
+  <!-- カード番号風 -->
+  <rect x="15" y="17" width="11.5" height="1.7" rx="0.85" fill="#1b1b20" fill-opacity="0.55"/>
+  <rect x="15" y="20.2" width="7.5" height="1.7" rx="0.85" fill="#1b1b20" fill-opacity="0.4"/>
+</svg>
