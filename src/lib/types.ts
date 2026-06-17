@@ -60,6 +60,8 @@ export interface Profile {
   id: string;
   display_name: string | null;
   is_admin: boolean;
+  is_subscribed: boolean;
+  subscribed_until: string | null;
   created_at: string;
 }
 

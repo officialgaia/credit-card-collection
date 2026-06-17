@@ -1,9 +1,11 @@
 import Link from 'next/link';
 import { getCurrentProfile } from '@/lib/auth';
 import { signout } from '@/app/auth/actions';
+import { isPro } from '@/lib/billing';
 
 export async function SiteHeader() {
   const profile = await getCurrentProfile();
+  const pro = isPro(profile);
 
   return (
     <header className="sticky top-0 z-30 border-b border-border bg-background/80 backdrop-blur-md">
@@ -36,6 +38,17 @@ export async function SiteHeader() {
                 コレクション
               </Link>
             </>
+          )}
+          {profile && !pro && (
+            <Link
+              href="/pricing"
+              className="rounded-md border border-accent/50 px-3 py-1.5 text-accent transition hover:bg-accent/10"
+            >
+              PROにする
+            </Link>
+          )}
+          {pro && !profile?.is_admin && (
+            <span className="rounded-md px-2 py-1.5 text-xs font-semibold text-accent">PRO</span>
           )}
           {profile?.is_admin && (
             <Link

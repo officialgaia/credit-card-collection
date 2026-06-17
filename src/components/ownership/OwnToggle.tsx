@@ -2,10 +2,11 @@
 
 import { useState, useTransition } from 'react';
 import { setCardStatus } from '@/app/actions/ownership';
+import { PaywallModal } from '@/components/billing/PaywallModal';
 import type { CardStatus } from '@/lib/types';
 
 // 所有 / 欲しい / なし をその場で切り替える。
-// 楽観的更新し、失敗時は元に戻す。
+// 無料プランの上限到達でブロック、6枚目以降は課金ポップアップを表示する。
 export function OwnToggle({
   cardId,
   initialStatus,
@@ -14,6 +15,7 @@ export function OwnToggle({
   initialStatus: CardStatus | null;
 }) {
   const [status, setStatus] = useState<CardStatus | null>(initialStatus);
+  const [paywall, setPaywall] = useState<'nudge' | 'limit_reached' | null>(null);
   const [isPending, startTransition] = useTransition();
 
   function update(next: CardStatus | null) {
@@ -21,7 +23,18 @@ export function OwnToggle({
     setStatus(next); // 楽観的更新
     startTransition(async () => {
       const res = await setCardStatus(cardId, next);
-      if (res?.error) setStatus(prev); // ロールバック
+      if (res?.error) {
+        setStatus(prev);
+        return;
+      }
+      if (res?.code === 'limit_reached') {
+        setStatus(prev); // 追加されていないので戻す
+        setPaywall('limit_reached');
+        return;
+      }
+      if (res?.code === 'nudge') {
+        setPaywall('nudge'); // 所有は成功、告知のみ
+      }
     });
   }
 
@@ -53,6 +66,8 @@ export function OwnToggle({
       >
         欲しい
       </button>
+
+      {paywall && <PaywallModal kind={paywall} onClose={() => setPaywall(null)} />}
     </div>
   );
 }

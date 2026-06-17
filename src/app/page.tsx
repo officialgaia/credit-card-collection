@@ -1,23 +1,26 @@
 import { Suspense } from 'react';
 import { getCardsWithStatus } from '@/lib/cards/queries';
-import { getCurrentUser } from '@/lib/auth';
+import { getCurrentProfile } from '@/lib/auth';
 import { CardTile } from '@/components/card/CardTile';
 import { CollectionProgress } from '@/components/collection/CollectionProgress';
 import { FilterBar } from '@/components/filter/FilterBar';
 import { SearchBox } from '@/components/filter/SearchBox';
+import { AdSlot } from '@/components/ads/AdSlot';
 import { parseFilters, applyFilters } from '@/lib/cards/filter';
+import { shouldShowAds } from '@/lib/billing';
 
 export default async function HomePage({
   searchParams,
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  const [cards, user, sp] = await Promise.all([
+  const [cards, profile, sp] = await Promise.all([
     getCardsWithStatus(),
-    getCurrentUser(),
+    getCurrentProfile(),
     searchParams,
   ]);
-  const isLoggedIn = !!user;
+  const isLoggedIn = !!profile;
+  const showAds = shouldShowAds(profile);
 
   const filters = parseFilters(sp);
   const visible = applyFilters(cards, filters);
@@ -64,6 +67,8 @@ export default async function HomePage({
           resultCount={visible.length}
         />
       </Suspense>
+
+      {showAds && <AdSlot />}
 
       {visible.length === 0 ? (
         <p className="rounded-xl border border-border bg-surface/60 p-8 text-center text-muted">

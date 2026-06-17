@@ -1,11 +1,13 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getCardBySlug } from '@/lib/cards/queries';
-import { getCurrentUser } from '@/lib/auth';
+import { getCurrentProfile } from '@/lib/auth';
 import { CardFace } from '@/components/card/CardFace';
 import { OwnToggle } from '@/components/ownership/OwnToggle';
+import { AdSlot } from '@/components/ads/AdSlot';
 import { formatYen, formatRate } from '@/lib/cards/style';
 import { BRAND_LABELS } from '@/lib/types';
+import { shouldShowAds } from '@/lib/billing';
 
 function Spec({ label, value }: { label: string; value: React.ReactNode }) {
   return (
@@ -26,10 +28,12 @@ export default async function CardDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const [card, user] = await Promise.all([getCardBySlug(slug), getCurrentUser()]);
+  const [card, profile] = await Promise.all([getCardBySlug(slug), getCurrentProfile()]);
   if (!card) notFound();
 
+  const user = profile;
   const owned = card.ownStatus === 'owned';
+  const showAds = shouldShowAds(profile);
 
   return (
     <div className="space-y-6">
@@ -74,6 +78,7 @@ export default async function CardDetailPage({
               )}
             </div>
           )}
+          {showAds && <AdSlot />}
         </div>
 
         <div>
