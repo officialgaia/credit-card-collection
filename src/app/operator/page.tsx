@@ -7,10 +7,7 @@ export default function OperatorPage() {
   return (
     <InfoPage title="運営者情報" lead="本サイトの運営者および広告・免責に関する情報です。">
       <InfoSection heading="運営者">
-        <p>
-          {/* ▼ 実際の運営者名に書き換えてください */}
-          （運営者名を記載してください）
-        </p>
+        <p>内藤良明</p>
       </InfoSection>
 
       <InfoSection heading="お問い合わせ">
@@ -39,7 +36,7 @@ export default function OperatorPage() {
       </InfoSection>
 
       <p className="rounded-lg border border-border bg-surface/60 p-3 text-xs text-muted">
-        ※ 本ページはテンプレートです。実際の運営者名・連絡先・必要な法定表示（特定商取引法に基づく表記等が必要な場合）を、ご自身の状況に合わせて記載・専門家確認のうえ公開してください。
+        ※ 物販等で特定商取引法に基づく表記が必要になる場合は、住所・連絡先等の追加記載が必要です。ご自身の状況に合わせてご確認ください。
       </p>
     </InfoPage>
   );
