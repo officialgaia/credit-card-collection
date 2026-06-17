@@ -18,12 +18,20 @@ export default async function AdminPage() {
           <h1 className="text-2xl font-semibold tracking-tight">管理者ダッシュボード</h1>
           <p className="mt-1 text-sm text-muted">登録カード {cards.length} 枚</p>
         </div>
-        <Link
-          href="/admin/cards/new"
-          className="rounded-md bg-accent px-4 py-2 text-sm font-semibold text-black transition hover:bg-accent-soft"
-        >
-          ＋ カードを追加
-        </Link>
+        <div className="flex gap-2">
+          <Link
+            href="/admin/images"
+            className="rounded-md border border-border px-4 py-2 text-sm font-medium transition hover:text-accent-soft"
+          >
+            画像を一括アップロード
+          </Link>
+          <Link
+            href="/admin/cards/new"
+            className="rounded-md bg-accent px-4 py-2 text-sm font-semibold text-black transition hover:bg-accent-soft"
+          >
+            ＋ カードを追加
+          </Link>
+        </div>
       </div>
 
       <div className="overflow-hidden rounded-2xl border border-border">
