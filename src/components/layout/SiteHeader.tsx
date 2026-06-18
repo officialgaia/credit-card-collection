@@ -48,7 +48,12 @@ export async function SiteHeader() {
             </Link>
           )}
           {pro && !profile?.is_admin && (
-            <span className="rounded-md px-2 py-1.5 text-xs font-semibold text-accent">PRO</span>
+            <Link
+              href="/pricing"
+              className="rounded-md border border-accent/40 px-2.5 py-1.5 text-xs font-semibold text-accent transition hover:bg-accent/10"
+            >
+              PRO
+            </Link>
           )}
           {profile?.is_admin && (
             <Link
