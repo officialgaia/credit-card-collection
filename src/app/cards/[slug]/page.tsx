@@ -10,6 +10,8 @@ import { formatYen, formatRate } from '@/lib/cards/style';
 import { BRAND_LABELS } from '@/lib/types';
 import { shouldShowAds, isPro } from '@/lib/billing';
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://credit-card-collection.vercel.app';
+
 export async function generateMetadata({
   params,
 }: {
@@ -56,6 +58,15 @@ export default async function CardDetailPage({
   const owned = card.ownStatus === 'owned' && !card.locked;
   const showAds = shouldShowAds(profile);
 
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'ホーム', item: siteUrl },
+      { '@type': 'ListItem', position: 2, name: card.name, item: `${siteUrl}/cards/${card.slug}` },
+    ],
+  };
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'FinancialProduct',
@@ -71,6 +82,10 @@ export default async function CardDetailPage({
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
       <Link href="/" className="text-sm text-muted transition hover:text-foreground">
         ← 一覧へ戻る

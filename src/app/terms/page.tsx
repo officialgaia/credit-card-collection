@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { InfoPage, InfoSection } from '@/components/layout/InfoPage';
 
-export const metadata = { title: '利用規約 — Card Collection' };
+export const metadata = { title: '利用規約', alternates: { canonical: '/terms' } };
 
 export default function TermsPage() {
   return (

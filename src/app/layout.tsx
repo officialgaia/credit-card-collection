@@ -54,6 +54,15 @@ export const metadata: Metadata = {
     : undefined,
 };
 
+// 運営組織の構造化データ
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: siteName,
+  url: siteUrl,
+  logo: `${siteUrl}/apple-icon`,
+};
+
 // サイト全体の構造化データ（検索ボックス対応）
 const websiteJsonLd = {
   "@context": "https://schema.org",
@@ -86,6 +95,10 @@ export default async function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
         />
         <SiteHeader />
         <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">{children}</main>

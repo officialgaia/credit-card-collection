@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { InfoPage } from '@/components/layout/InfoPage';
 
-export const metadata = { title: 'よくある質問 — Card Collection' };
+export const metadata = { title: 'よくある質問', alternates: { canonical: '/faq' } };
 
 const FAQS: { q: string; a: React.ReactNode }[] = [
   {

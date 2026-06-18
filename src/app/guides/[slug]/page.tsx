@@ -71,6 +71,16 @@ export default async function GuidePage({
     })),
   };
 
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'ホーム', item: siteUrl },
+      { '@type': 'ListItem', position: 2, name: '特集', item: `${siteUrl}/guides` },
+      { '@type': 'ListItem', position: 3, name: guide.heading, item: `${siteUrl}/guides/${guide.slug}` },
+    ],
+  };
+
   return (
     <div className="space-y-6">
       <script
@@ -80,6 +90,10 @@ export default async function GuidePage({
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
 
       <nav className="text-sm text-muted">

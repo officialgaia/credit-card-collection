@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { InfoPage, InfoSection } from '@/components/layout/InfoPage';
 
-export const metadata = { title: '個人情報保護方針 — Card Collection' };
+export const metadata = { title: '個人情報保護方針', alternates: { canonical: '/privacy' } };
 
 export default function PrivacyPage() {
   return (

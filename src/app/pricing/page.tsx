@@ -3,7 +3,7 @@ import { getCurrentProfile } from '@/lib/auth';
 import { PLAN_PRICE_LABEL, FREE_OWNED_LIMIT } from '@/lib/billing';
 import { UpgradeButton } from '@/components/billing/UpgradeButton';
 
-export const metadata = { title: '料金プラン — Card Collection' };
+export const metadata = { title: '料金プラン', alternates: { canonical: '/pricing' } };
 
 export default async function PricingPage({
   searchParams,

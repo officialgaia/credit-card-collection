@@ -1,6 +1,6 @@
 import { ForgotForm } from './ForgotForm';
 
-export const metadata = { title: 'パスワード再設定 — Card Collection' };
+export const metadata = { title: 'パスワード再設定 — Card Collection', robots: { index: false } };
 
 export default function ForgotPasswordPage() {
   return (

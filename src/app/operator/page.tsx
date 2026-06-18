@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { InfoPage, InfoSection } from '@/components/layout/InfoPage';
 
-export const metadata = { title: '運営者情報 — Card Collection' };
+export const metadata = { title: '運営者情報', alternates: { canonical: '/operator' } };
 
 export default function OperatorPage() {
   return (

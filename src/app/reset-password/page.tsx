@@ -1,6 +1,6 @@
 import { ResetForm } from './ResetForm';
 
-export const metadata = { title: '新しいパスワードの設定 — Card Collection' };
+export const metadata = { title: '新しいパスワードの設定 — Card Collection', robots: { index: false } };
 
 export default function ResetPasswordPage() {
   return (

@@ -1,7 +1,7 @@
 import { InfoPage } from '@/components/layout/InfoPage';
 import { ContactForm } from './ContactForm';
 
-export const metadata = { title: 'お問い合わせ — Card Collection' };
+export const metadata = { title: 'お問い合わせ', alternates: { canonical: '/contact' } };
 
 export default function ContactPage() {
   return (

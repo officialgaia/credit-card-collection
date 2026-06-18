@@ -11,6 +11,8 @@ import { cardMatchesQuery } from '@/lib/cards/search';
 import { isPro } from '@/lib/billing';
 import type { CardWithStatus } from '@/lib/types';
 
+export const metadata = { title: 'マイコレクション', robots: { index: false } };
+
 function matchesQuery(card: CardWithStatus, q: string): boolean {
   return cardMatchesQuery(card.name, card.issuer, q);
 }

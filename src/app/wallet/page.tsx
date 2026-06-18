@@ -6,6 +6,8 @@ import { WalletStack } from '@/components/wallet/WalletStack';
 import { formatYen } from '@/lib/cards/style';
 import { isPro } from '@/lib/billing';
 
+export const metadata = { title: 'マイ財布', robots: { index: false } };
+
 export default async function WalletPage() {
   const profile = await getCurrentProfile();
   if (!profile) redirect('/login');

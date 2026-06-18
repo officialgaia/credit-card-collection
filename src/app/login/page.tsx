@@ -2,6 +2,8 @@ import { redirect } from 'next/navigation';
 import { getCurrentUser } from '@/lib/auth';
 import { AuthForm } from './AuthForm';
 
+export const metadata = { title: 'ログイン・新規登録', robots: { index: false } };
+
 export default async function LoginPage({
   searchParams,
 }: {
