@@ -59,11 +59,25 @@ export default async function GuidePage({
     })),
   };
 
+  const faqJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: guide.faqs.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  };
+
   return (
     <div className="space-y-6">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
 
       <nav className="text-sm text-muted">
@@ -84,6 +98,18 @@ export default async function GuidePage({
         </p>
       </header>
 
+      <section className="rounded-2xl border border-border bg-surface/50 p-5">
+        <h2 className="text-sm font-semibold text-accent">選び方のチェックポイント</h2>
+        <ul className="mt-3 space-y-2 text-sm">
+          {guide.points.map((p, i) => (
+            <li key={i} className="flex gap-2">
+              <span className="text-accent">✓</span>
+              <span>{p}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+
       <p className="text-sm text-muted">{matched.length} 枚</p>
 
       {matched.length === 0 ? (
@@ -97,6 +123,35 @@ export default async function GuidePage({
           ))}
         </div>
       )}
+
+      {/* 解説本文 */}
+      <div className="space-y-5">
+        {guide.sections.map((s, i) => (
+          <section key={i} className="space-y-2">
+            <h2 className="text-lg font-semibold">{s.heading}</h2>
+            <p className="text-sm leading-relaxed text-muted">{s.body}</p>
+          </section>
+        ))}
+      </div>
+
+      {/* よくある質問 */}
+      <section className="space-y-3">
+        <h2 className="text-lg font-semibold">よくある質問</h2>
+        <div className="space-y-3">
+          {guide.faqs.map((f, i) => (
+            <details
+              key={i}
+              className="group rounded-xl border border-border bg-surface/60 p-4 [&_summary]:cursor-pointer"
+            >
+              <summary className="flex items-center justify-between font-medium marker:content-['']">
+                {f.q}
+                <span className="text-muted transition group-open:rotate-180">▾</span>
+              </summary>
+              <p className="mt-3 text-sm leading-relaxed text-muted">{f.a}</p>
+            </details>
+          ))}
+        </div>
+      </section>
 
       <section className="space-y-3 rounded-2xl border border-border bg-surface/50 p-5">
         <h2 className="text-sm font-semibold text-accent">他の特集</h2>
