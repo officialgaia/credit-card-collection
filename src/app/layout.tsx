@@ -3,6 +3,9 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
 import { SiteHeader } from "@/components/layout/SiteHeader";
+import { PopupAd } from "@/components/ads/PopupAd";
+import { getCurrentProfile } from "@/lib/auth";
+import { shouldShowAds } from "@/lib/billing";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -66,11 +69,14 @@ const websiteJsonLd = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const profile = await getCurrentProfile();
+  const showAds = shouldShowAds(profile);
+
   return (
     <html
       lang="ja"
@@ -114,6 +120,7 @@ export default function RootLayout({
             </p>
           </div>
         </footer>
+        {showAds && <PopupAd />}
         <Analytics />
       </body>
     </html>

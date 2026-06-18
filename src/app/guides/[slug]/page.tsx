@@ -3,8 +3,9 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getCardsWithStatus } from '@/lib/cards/queries';
 import { getCurrentProfile } from '@/lib/auth';
-import { isPro } from '@/lib/billing';
+import { isPro, shouldShowAds } from '@/lib/billing';
 import { CardTile } from '@/components/card/CardTile';
+import { AdSlot } from '@/components/ads/AdSlot';
 import { GUIDES, getGuide } from '@/lib/guides';
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://credit-card-collection.vercel.app';
@@ -40,6 +41,7 @@ export default async function GuidePage({
 
   const profile = await getCurrentProfile();
   const isLoggedIn = !!profile;
+  const showAds = shouldShowAds(profile);
   const cards = await getCardsWithStatus(isPro(profile));
 
   const matched = cards.filter(guide.filter);
@@ -109,6 +111,8 @@ export default async function GuidePage({
           ))}
         </ul>
       </section>
+
+      {showAds && <AdSlot />}
 
       <p className="text-sm text-muted">{matched.length} 枚</p>
 

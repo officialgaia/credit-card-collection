@@ -1,6 +1,9 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { getAllCards } from '@/lib/cards/queries';
+import { getCurrentProfile } from '@/lib/auth';
+import { shouldShowAds } from '@/lib/billing';
+import { AdSlot } from '@/components/ads/AdSlot';
 import { GUIDES } from '@/lib/guides';
 
 export const metadata: Metadata = {
@@ -11,7 +14,8 @@ export const metadata: Metadata = {
 };
 
 export default async function GuidesPage() {
-  const cards = await getAllCards();
+  const [cards, profile] = await Promise.all([getAllCards(), getCurrentProfile()]);
+  const showAds = shouldShowAds(profile);
 
   return (
     <div className="space-y-6">
@@ -21,6 +25,8 @@ export default async function GuidesPage() {
           目的別におすすめのクレジットカードをまとめました。気になるテーマから比較できます。
         </p>
       </header>
+
+      {showAds && <AdSlot />}
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {GUIDES.map((g) => {
