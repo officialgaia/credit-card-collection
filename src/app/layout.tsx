@@ -46,6 +46,9 @@ export const metadata: Metadata = {
     description: siteDescription,
   },
   robots: { index: true, follow: true },
+  verification: process.env.GOOGLE_SITE_VERIFICATION
+    ? { google: process.env.GOOGLE_SITE_VERIFICATION }
+    : undefined,
 };
 
 // サイト全体の構造化データ（検索ボックス対応）
