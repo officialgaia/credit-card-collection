@@ -7,7 +7,7 @@ export default function OperatorPage() {
   return (
     <InfoPage title="運営者情報" lead="本サイトの運営者および広告・免責に関する情報です。">
       <InfoSection heading="運営者">
-        <p>内藤良明</p>
+        <p>Card Collection 運営者</p>
       </InfoSection>
 
       <InfoSection heading="お問い合わせ">
