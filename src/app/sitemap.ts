@@ -5,7 +5,7 @@ import { GUIDES } from '@/lib/guides';
 const base = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://credit-card-collection.vercel.app';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const staticPaths = ['', '/guides', '/login', '/pricing', '/faq', '/terms', '/privacy', '/contact', '/operator'];
+  const staticPaths = ['', '/guides', '/simulator', '/login', '/pricing', '/faq', '/terms', '/privacy', '/contact', '/operator'];
   const staticUrls: MetadataRoute.Sitemap = staticPaths.map((p) => ({
     url: `${base}${p}`,
     changeFrequency: p === '' ? 'daily' : 'weekly',

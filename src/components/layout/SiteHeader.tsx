@@ -30,6 +30,12 @@ export async function SiteHeader() {
           >
             特集
           </Link>
+          <Link
+            href="/simulator"
+            className="rounded-md px-3 py-1.5 text-muted transition hover:text-foreground"
+          >
+            試算
+          </Link>
           {profile && (
             <>
               <Link
