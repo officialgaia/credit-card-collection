@@ -14,10 +14,53 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://credit-card-collection.vercel.app";
+const siteName = "Card Collection";
+const siteDescription =
+  "日本で発行できるクレジットカードを年会費・還元率・国際ブランド・特典で検索・比較。所有カードを記録してコレクションとして可視化できます。";
+
 export const metadata: Metadata = {
-  title: "Card Collection — 日本のクレジットカード図鑑",
-  description:
-    "日本で発行できるクレジットカードを集めて可視化するコレクション管理サイト。",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: "Card Collection — 日本のクレジットカード図鑑・比較",
+    template: "%s | Card Collection",
+  },
+  description: siteDescription,
+  applicationName: siteName,
+  keywords: [
+    "クレジットカード", "クレカ", "クレジットカード 比較", "年会費", "還元率",
+    "ゴールドカード", "プラチナカード", "国際ブランド", "クレジットカード コレクション",
+  ],
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    locale: "ja_JP",
+    url: siteUrl,
+    siteName,
+    title: "Card Collection — 日本のクレジットカード図鑑・比較",
+    description: siteDescription,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Card Collection — 日本のクレジットカード図鑑・比較",
+    description: siteDescription,
+  },
+  robots: { index: true, follow: true },
+};
+
+// サイト全体の構造化データ（検索ボックス対応）
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: siteName,
+  url: siteUrl,
+  description: siteDescription,
+  inLanguage: "ja",
+  potentialAction: {
+    "@type": "SearchAction",
+    target: `${siteUrl}/?q={search_term_string}`,
+    "query-input": "required name=search_term_string",
+  },
 };
 
 export default function RootLayout({
@@ -31,6 +74,10 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+        />
         <SiteHeader />
         <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">{children}</main>
         <footer className="mt-10 border-t border-border">

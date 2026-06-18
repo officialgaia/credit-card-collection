@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getCardBySlug } from '@/lib/cards/queries';
@@ -8,6 +9,25 @@ import { AdSlot } from '@/components/ads/AdSlot';
 import { formatYen, formatRate } from '@/lib/cards/style';
 import { BRAND_LABELS } from '@/lib/types';
 import { shouldShowAds, isPro } from '@/lib/billing';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const card = await getCardBySlug(slug);
+  if (!card) return { title: 'カードが見つかりません' };
+
+  const desc = `${card.issuer}の「${card.name}」（${card.tier}）。年会費${formatYen(card.annual_fee)}、基本還元率${formatRate(card.base_reward_rate)}、国際ブランド${card.brands.map((b) => BRAND_LABELS[b]).join('・') || '—'}。特典・スペックを比較できます。`;
+  return {
+    title: card.name,
+    description: desc,
+    alternates: { canonical: `/cards/${card.slug}` },
+    openGraph: { type: 'article', title: card.name, description: desc },
+    twitter: { card: 'summary_large_image', title: card.name, description: desc },
+  };
+}
 
 function Spec({ label, value }: { label: string; value: React.ReactNode }) {
   return (
@@ -36,8 +56,22 @@ export default async function CardDetailPage({
   const owned = card.ownStatus === 'owned' && !card.locked;
   const showAds = shouldShowAds(profile);
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FinancialProduct',
+    name: card.name,
+    category: `クレジットカード（${card.tier}）`,
+    description: `${card.issuer}の${card.name}。年会費${formatYen(card.annual_fee)}、還元率${formatRate(card.base_reward_rate)}。`,
+    provider: { '@type': 'Organization', name: card.issuer },
+    ...(card.official_url ? { url: card.official_url } : {}),
+  };
+
   return (
     <div className="space-y-6">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Link href="/" className="text-sm text-muted transition hover:text-foreground">
         ← 一覧へ戻る
       </Link>
