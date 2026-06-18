@@ -1,4 +1,4 @@
-import { Suspense } from 'react';
+import { Fragment, Suspense } from 'react';
 import { getCardsWithStatus } from '@/lib/cards/queries';
 import { getCurrentProfile } from '@/lib/auth';
 import { CardTile } from '@/components/card/CardTile';
@@ -78,8 +78,15 @@ export default async function HomePage({
         </p>
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {visible.map((card) => (
-            <CardTile key={card.id} card={card} isLoggedIn={isLoggedIn} />
+          {visible.map((card, i) => (
+            <Fragment key={card.id}>
+              <CardTile card={card} isLoggedIn={isLoggedIn} />
+              {showAds && (i + 1) % 50 === 0 && i < visible.length - 1 && (
+                <div className="col-span-full py-2">
+                  <AdSlot />
+                </div>
+              )}
+            </Fragment>
           ))}
         </div>
       )}
