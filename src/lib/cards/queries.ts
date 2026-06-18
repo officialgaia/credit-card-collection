@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
+import { getCurrentUser } from '@/lib/auth';
 import type { Card, CardWithStatus, CardStatus } from '@/lib/types';
 import { FREE_OWNED_LIMIT } from '@/lib/billing';
 
@@ -25,9 +26,7 @@ export async function getCardsWithStatus(isPro = false): Promise<CardWithStatus[
   if (error) throw error;
   const cardList = (cards ?? []) as Card[];
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getCurrentUser();
 
   let statusByCard = new Map<string, CardStatus>();
   let lockedIds = new Set<string>();
@@ -82,9 +81,7 @@ export async function getCardBySlug(slug: string, isPro = false): Promise<CardWi
 
   if (!card) return null;
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getCurrentUser();
 
   let ownStatus: CardStatus | null = null;
   let locked = false;

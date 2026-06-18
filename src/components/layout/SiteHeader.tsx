@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { getCurrentProfile } from '@/lib/auth';
 import { signout } from '@/app/auth/actions';
 import { isPro } from '@/lib/billing';
+import { SignOutButton } from '@/components/auth/SignOutButton';
 
 export async function SiteHeader() {
   const profile = await getCurrentProfile();
@@ -66,12 +67,7 @@ export async function SiteHeader() {
 
           {profile ? (
             <form action={signout}>
-              <button
-                type="submit"
-                className="ml-1 rounded-md border border-border px-3 py-1.5 text-muted transition hover:text-foreground"
-              >
-                ログアウト
-              </button>
+              <SignOutButton />
             </form>
           ) : (
             <Link
