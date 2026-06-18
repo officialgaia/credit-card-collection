@@ -9,6 +9,7 @@ import { AdSlot } from '@/components/ads/AdSlot';
 import { formatYen, formatRate } from '@/lib/cards/style';
 import { BRAND_LABELS } from '@/lib/types';
 import { shouldShowAds, isPro } from '@/lib/billing';
+import { cardLead, cardForWhom } from '@/lib/cards/review';
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://credit-card-collection.vercel.app';
 
@@ -142,6 +143,15 @@ export default async function CardDetailPage({
           <p className="text-sm text-muted">{card.issuer}</p>
           <h1 className="mt-1 text-2xl font-semibold tracking-tight">{card.name}</h1>
           <p className="mt-1 text-sm text-accent">{card.tier}</p>
+
+          <section className="mt-5 space-y-3 rounded-2xl border border-border bg-surface/50 p-5">
+            <h2 className="text-sm font-semibold text-accent">このカードのポイント</h2>
+            <p className="text-sm leading-relaxed text-muted">{cardLead(card)}</p>
+            <p className="text-sm leading-relaxed">
+              <span className="font-medium">向いている人：</span>
+              <span className="text-muted">{cardForWhom(card)}</span>
+            </p>
+          </section>
 
           <dl className="mt-6">
             <Spec label="国際ブランド" value={card.brands.map((b) => BRAND_LABELS[b]).join(' / ') || '—'} />

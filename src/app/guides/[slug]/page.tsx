@@ -7,6 +7,8 @@ import { isPro, shouldShowAds } from '@/lib/billing';
 import { CardTile } from '@/components/card/CardTile';
 import { AdSlot } from '@/components/ads/AdSlot';
 import { GUIDES, getGuide } from '@/lib/guides';
+import { cardBadges } from '@/lib/cards/review';
+import { formatYen, formatRate } from '@/lib/cards/style';
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://credit-card-collection.vercel.app';
 
@@ -128,9 +130,52 @@ export default async function GuidePage({
         </ul>
       </section>
 
+      {matched.length >= 3 && (
+        <section className="space-y-3">
+          <h2 className="text-lg font-semibold">おすすめTOP3</h2>
+          <ol className="space-y-3">
+            {matched.slice(0, 3).map((card, i) => (
+              <li
+                key={card.id}
+                className="flex gap-4 rounded-2xl border border-border bg-surface/60 p-4"
+              >
+                <span
+                  className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold ${
+                    i === 0 ? 'bg-accent text-black' : 'bg-surface-2 text-accent'
+                  }`}
+                >
+                  {i + 1}
+                </span>
+                <div className="min-w-0 flex-1">
+                  <Link
+                    href={`/cards/${card.slug}`}
+                    className="font-semibold hover:text-accent-soft"
+                  >
+                    {card.name}
+                  </Link>
+                  <p className="mt-0.5 text-xs text-muted">
+                    {card.issuer} · 年会費 {formatYen(card.annual_fee)} · 還元 {formatRate(card.base_reward_rate)}
+                  </p>
+                  <div className="mt-2 flex flex-wrap gap-1.5">
+                    {cardBadges(card).slice(0, 4).map((b) => (
+                      <span
+                        key={b}
+                        className="rounded-full border border-border bg-surface-2 px-2 py-0.5 text-[11px] text-muted"
+                      >
+                        {b}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </section>
+      )}
+
       {showAds && <AdSlot />}
 
-      <p className="text-sm text-muted">{matched.length} 枚</p>
+      <p className="text-sm text-muted">すべての該当カード（{matched.length} 枚）</p>
 
       {matched.length === 0 ? (
         <p className="rounded-xl border border-border bg-surface/60 p-8 text-center text-muted">
