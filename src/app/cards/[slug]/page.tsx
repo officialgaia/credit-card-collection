@@ -136,7 +136,7 @@ export default async function CardDetailPage({
               )}
             </div>
           )}
-          {showAds && <AdSlot />}
+          {showAds && <AdSlot slot={2} />}
         </div>
 
         <div>

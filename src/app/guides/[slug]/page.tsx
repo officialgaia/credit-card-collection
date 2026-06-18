@@ -173,7 +173,7 @@ export default async function GuidePage({
         </section>
       )}
 
-      {showAds && <AdSlot />}
+      {showAds && <AdSlot slot={2} />}
 
       <p className="text-sm text-muted">すべての該当カード（{matched.length} 枚）</p>
 

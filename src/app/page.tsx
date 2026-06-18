@@ -83,7 +83,7 @@ export default async function HomePage({
               <CardTile card={card} isLoggedIn={isLoggedIn} />
               {showAds && (i + 1) % 50 === 0 && i < visible.length - 1 && (
                 <div className="col-span-full py-2">
-                  <AdSlot />
+                  <AdSlot slot={((i + 1) / 50) % 2 === 1 ? 2 : 1} />
                 </div>
               )}
             </Fragment>
