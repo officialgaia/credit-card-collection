@@ -7,16 +7,16 @@ import { FilterBar } from '@/components/filter/FilterBar';
 import { SearchBox } from '@/components/filter/SearchBox';
 import { AdSlot } from '@/components/ads/AdSlot';
 import { parseFilters, applyFilters } from '@/lib/cards/filter';
-import { shouldShowAds } from '@/lib/billing';
+import { shouldShowAds, isPro } from '@/lib/billing';
 
 export default async function HomePage({
   searchParams,
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  const [cards, profile, sp] = await Promise.all([
-    getCardsWithStatus(),
-    getCurrentProfile(),
+  const profile = await getCurrentProfile();
+  const [cards, sp] = await Promise.all([
+    getCardsWithStatus(isPro(profile)),
     searchParams,
   ]);
   const isLoggedIn = !!profile;
@@ -32,7 +32,7 @@ export default async function HomePage({
   const suggestions = cards.map((c) => ({ name: c.name, slug: c.slug, issuer: c.issuer }));
 
   // 収集サマリは全カードに対する所有状況（フィルタの影響を受けない）
-  const owned = cards.filter((c) => c.ownStatus === 'owned');
+  const owned = cards.filter((c) => c.ownStatus === 'owned' && !c.locked);
   const totalAnnualFee = owned.reduce((sum, c) => sum + c.annual_fee, 0);
   const priorityPassCount = owned.filter((c) => c.priority_pass !== 'なし').length;
 

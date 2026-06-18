@@ -1,18 +1,19 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { getCardsWithStatus } from '@/lib/cards/queries';
-import { getCurrentUser } from '@/lib/auth';
+import { getCurrentProfile } from '@/lib/auth';
 import { WalletStack } from '@/components/wallet/WalletStack';
 import { formatYen } from '@/lib/cards/style';
+import { isPro } from '@/lib/billing';
 
 export default async function WalletPage() {
-  const user = await getCurrentUser();
-  if (!user) redirect('/login');
+  const profile = await getCurrentProfile();
+  if (!profile) redirect('/login');
 
-  const cards = await getCardsWithStatus();
-  // 所有カードを年会費の高い順（=見栄えする高ランクが上）に重ねる
+  const cards = await getCardsWithStatus(isPro(profile));
+  // 所有カードを年会費の高い順（=見栄えする高ランクが上）に重ねる（ロック分は除外）
   const owned = cards
-    .filter((c) => c.ownStatus === 'owned')
+    .filter((c) => c.ownStatus === 'owned' && !c.locked)
     .sort((a, b) => b.annual_fee - a.annual_fee);
 
   const totalAnnualFee = owned.reduce((s, c) => s + c.annual_fee, 0);

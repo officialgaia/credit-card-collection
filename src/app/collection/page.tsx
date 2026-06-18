@@ -2,12 +2,13 @@ import Link from 'next/link';
 import { Suspense } from 'react';
 import { redirect } from 'next/navigation';
 import { getCardsWithStatus } from '@/lib/cards/queries';
-import { getCurrentUser } from '@/lib/auth';
+import { getCurrentProfile } from '@/lib/auth';
 import { CardTile } from '@/components/card/CardTile';
 import { StatsDashboard } from '@/components/collection/StatsDashboard';
 import { SearchBox } from '@/components/filter/SearchBox';
 import { computeCollectionStats } from '@/lib/cards/stats';
 import { cardMatchesQuery } from '@/lib/cards/search';
+import { isPro } from '@/lib/billing';
 import type { CardWithStatus } from '@/lib/types';
 
 function matchesQuery(card: CardWithStatus, q: string): boolean {
@@ -19,18 +20,23 @@ export default async function CollectionPage({
 }: {
   searchParams: Promise<{ q?: string }>;
 }) {
-  const user = await getCurrentUser();
-  if (!user) redirect('/login');
+  const profile = await getCurrentProfile();
+  if (!profile) redirect('/login');
 
-  const [cards, sp] = await Promise.all([getCardsWithStatus(), searchParams]);
+  const [cards, sp] = await Promise.all([
+    getCardsWithStatus(isPro(profile)),
+    searchParams,
+  ]);
   const q = (sp.q ?? '').trim();
   const stats = computeCollectionStats(cards);
 
   // 集計は全コレクション基準。表示グリッドのみ検索語で絞り込む。
-  const ownedAll = cards.filter((c) => c.ownStatus === 'owned');
+  const ownedAll = cards.filter((c) => c.ownStatus === 'owned' && !c.locked);
   const wantAll = cards.filter((c) => c.ownStatus === 'want');
+  const lockedAll = cards.filter((c) => c.locked);
   const owned = ownedAll.filter((c) => matchesQuery(c, q));
   const want = wantAll.filter((c) => matchesQuery(c, q));
+  const locked = lockedAll.filter((c) => matchesQuery(c, q));
 
   const suggestions = [...ownedAll, ...wantAll].map((c) => ({
     name: c.name,
@@ -74,6 +80,31 @@ export default async function CollectionPage({
           </div>
         )}
       </section>
+
+      {lockedAll.length > 0 && (
+        <section className="space-y-3">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <h2 className="text-lg font-semibold">
+              🔒 ロック中 <span className="text-muted">{locked.length}</span>
+              {q && <span className="ml-1 text-xs text-muted">/ 全{lockedAll.length}</span>}
+            </h2>
+            <Link
+              href="/pricing"
+              className="rounded-md border border-accent/50 px-3 py-1.5 text-sm font-medium text-accent transition hover:bg-accent/10"
+            >
+              PROで全部解放
+            </Link>
+          </div>
+          <p className="text-sm text-muted">
+            無料プランの上限（10枚）を超えた分です。PROに加入すると再び表示・カウントされます。
+          </p>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {locked.map((card) => (
+              <CardTile key={card.id} card={card} isLoggedIn />
+            ))}
+          </div>
+        </section>
+      )}
 
       <section className="space-y-3">
         <h2 className="text-lg font-semibold">

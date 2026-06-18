@@ -7,7 +7,7 @@ import { OwnToggle } from '@/components/ownership/OwnToggle';
 import { AdSlot } from '@/components/ads/AdSlot';
 import { formatYen, formatRate } from '@/lib/cards/style';
 import { BRAND_LABELS } from '@/lib/types';
-import { shouldShowAds } from '@/lib/billing';
+import { shouldShowAds, isPro } from '@/lib/billing';
 
 function Spec({ label, value }: { label: string; value: React.ReactNode }) {
   return (
@@ -28,11 +28,12 @@ export default async function CardDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const [card, profile] = await Promise.all([getCardBySlug(slug), getCurrentProfile()]);
+  const profile = await getCurrentProfile();
+  const card = await getCardBySlug(slug, isPro(profile));
   if (!card) notFound();
 
   const user = profile;
-  const owned = card.ownStatus === 'owned';
+  const owned = card.ownStatus === 'owned' && !card.locked;
   const showAds = shouldShowAds(profile);
 
   return (
@@ -46,7 +47,14 @@ export default async function CardDetailPage({
           <div className={`relative ${owned ? 'owned-sheen' : 'is-unowned'}`}>
             <CardFace card={card} />
           </div>
-          {user ? (
+          {card.locked ? (
+            <Link
+              href="/pricing"
+              className="block rounded-md border border-accent/50 px-2 py-2 text-center text-sm font-medium text-accent transition hover:bg-accent/10"
+            >
+              🔒 ロック中 — PROで解放
+            </Link>
+          ) : user ? (
             <OwnToggle cardId={card.id} initialStatus={card.ownStatus} />
           ) : (
             <Link

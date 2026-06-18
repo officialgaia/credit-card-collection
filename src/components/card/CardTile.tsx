@@ -12,7 +12,8 @@ export function CardTile({
   card: CardWithStatus;
   isLoggedIn: boolean;
 }) {
-  const owned = card.ownStatus === 'owned';
+  const locked = card.locked;
+  const owned = card.ownStatus === 'owned' && !locked;
 
   return (
     <div
@@ -24,15 +25,19 @@ export function CardTile({
         }`}
     >
       <Link href={`/cards/${card.slug}`} className="block">
-        <div
-          className={`relative ${owned ? 'owned-sheen' : 'is-unowned'}`}
-          aria-hidden={false}
-        >
+        <div className={`relative ${owned ? 'owned-sheen' : 'is-unowned'}`}>
           <CardFace card={card} />
-          {card.ownStatus === 'want' && (
+          {card.ownStatus === 'want' && !locked && (
             <span className="absolute right-2 top-2 z-10 rounded-full border border-accent/60 bg-black/70 px-2 py-0.5 text-[10px] font-medium text-accent">
               欲しい
             </span>
+          )}
+          {locked && (
+            <div className="absolute inset-0 z-10 flex items-center justify-center rounded-xl bg-black/55">
+              <span className="rounded-full border border-accent/50 bg-black/70 px-3 py-1 text-xs font-medium text-accent">
+                🔒 ロック中
+              </span>
+            </div>
           )}
         </div>
       </Link>
@@ -51,7 +56,14 @@ export function CardTile({
           <span>還元 {formatRate(card.base_reward_rate)}</span>
         </div>
 
-        {isLoggedIn ? (
+        {locked ? (
+          <Link
+            href="/pricing"
+            className="block rounded-md border border-accent/50 px-2 py-1.5 text-center text-xs font-medium text-accent transition hover:bg-accent/10"
+          >
+            🔒 PROで解放
+          </Link>
+        ) : isLoggedIn ? (
           <OwnToggle cardId={card.id} initialStatus={card.ownStatus} />
         ) : (
           <Link

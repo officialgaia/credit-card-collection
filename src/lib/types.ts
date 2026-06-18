@@ -75,4 +75,7 @@ export interface UserCard {
 // 一覧で扱う「カード + ログインユーザーの所有状態」
 export interface CardWithStatus extends Card {
   ownStatus: CardStatus | null; // null = 未所有
+  // 無料プランで上限を超えてロック中の所有カード（PROで解放）。
+  // locked=true のときは ownStatus は 'owned' だが「有効な所有」には数えない。
+  locked: boolean;
 }

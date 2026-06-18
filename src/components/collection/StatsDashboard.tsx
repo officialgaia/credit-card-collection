@@ -39,6 +39,7 @@ export function StatsDashboard({ stats }: { stats: CollectionStats }) {
         <Stat label="プライオリティパス" value={`${stats.priorityPassCount} 枚`} />
         <Stat label="空港ラウンジ" value={`${stats.loungeCount} 枚`} />
         <Stat label="欲しいリスト" value={`${stats.wantCount} 枚`} />
+        {stats.lockedCount > 0 && <Stat label="🔒 ロック中" value={`${stats.lockedCount} 枚`} />}
       </section>
 
       {/* ランク別収集状況 */}

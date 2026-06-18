@@ -19,6 +19,7 @@ export interface Achievement {
 export interface CollectionStats {
   total: number;
   ownedCount: number;
+  lockedCount: number;
   wantCount: number;
   pct: number;
   totalAnnualFee: number;
@@ -35,7 +36,9 @@ export interface CollectionStats {
 }
 
 export function computeCollectionStats(cards: CardWithStatus[]): CollectionStats {
-  const owned = cards.filter((c) => c.ownStatus === 'owned');
+  // ロック中（上限超過）は「有効な所有」に数えない
+  const owned = cards.filter((c) => c.ownStatus === 'owned' && !c.locked);
+  const lockedCount = cards.filter((c) => c.locked).length;
   const want = cards.filter((c) => c.ownStatus === 'want');
 
   const total = cards.length;
@@ -143,6 +146,7 @@ export function computeCollectionStats(cards: CardWithStatus[]): CollectionStats
   return {
     total,
     ownedCount,
+    lockedCount,
     wantCount: want.length,
     pct,
     totalAnnualFee,
