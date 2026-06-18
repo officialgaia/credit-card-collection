@@ -37,7 +37,10 @@ export function WalletStack({ cards }: { cards: Card[] }) {
             <button
               key={c.id}
               type="button"
-              onClick={() => setExpanded(i)}
+              onClick={() => {
+                setActive(null); // 持ち上げ状態を解除してモーダルだけ見せる
+                setExpanded(i);
+              }}
               onMouseEnter={() => setActive(i)}
               onMouseLeave={() => setActive((cur) => (cur === i ? null : cur))}
               aria-label={`${c.name} を拡大`}
@@ -68,7 +71,7 @@ export function WalletStack({ cards }: { cards: Card[] }) {
       {/* 拡大モーダル */}
       {card && (
         <div
-          className="fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-sm"
+          className="fixed inset-0 z-[200] overflow-y-auto bg-black/90 backdrop-blur-sm"
           onClick={() => setExpanded(null)}
         >
           <div className="flex min-h-full items-center justify-center p-4">
