@@ -24,6 +24,12 @@ export async function SiteHeader() {
           >
             一覧
           </Link>
+          <Link
+            href="/guides"
+            className="rounded-md px-3 py-1.5 text-muted transition hover:text-foreground"
+          >
+            特集
+          </Link>
           {profile && (
             <>
               <Link

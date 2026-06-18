@@ -1,14 +1,21 @@
 import type { MetadataRoute } from 'next';
 import { createClient } from '@supabase/supabase-js';
+import { GUIDES } from '@/lib/guides';
 
 const base = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://credit-card-collection.vercel.app';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const staticPaths = ['', '/login', '/pricing', '/faq', '/terms', '/privacy', '/contact', '/operator'];
+  const staticPaths = ['', '/guides', '/login', '/pricing', '/faq', '/terms', '/privacy', '/contact', '/operator'];
   const staticUrls: MetadataRoute.Sitemap = staticPaths.map((p) => ({
     url: `${base}${p}`,
     changeFrequency: p === '' ? 'daily' : 'weekly',
     priority: p === '' ? 1 : 0.5,
+  }));
+
+  const guideUrls: MetadataRoute.Sitemap = GUIDES.map((g) => ({
+    url: `${base}/guides/${g.slug}`,
+    changeFrequency: 'weekly',
+    priority: 0.8,
   }));
 
   let cardUrls: MetadataRoute.Sitemap = [];
@@ -29,5 +36,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // 取得失敗時は静的URLのみ
   }
 
-  return [...staticUrls, ...cardUrls];
+  return [...staticUrls, ...guideUrls, ...cardUrls];
 }
