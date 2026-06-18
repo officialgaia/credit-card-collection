@@ -2,8 +2,9 @@
 // 2系統の広告（例: slot1=A8バナー / slot2=忍者AdMax）を併用できる。
 //   slot1: NEXT_PUBLIC_AD_HTML   / NEXT_PUBLIC_AD_WIDTH   / NEXT_PUBLIC_AD_HEIGHT
 //   slot2: NEXT_PUBLIC_AD_HTML_2 / NEXT_PUBLIC_AD_WIDTH_2 / NEXT_PUBLIC_AD_HEIGHT_2
-// 各 HTML はそのネットワークのタグ。<script> を含むものは iframe 内で安全に実行。
+// 各 HTML はそのネットワークのタグ。<script> を含むものは同一オリジンの iframe で実行。
 // 未設定の枠は何も表示しない（null）。
+import { ScriptAdFrame } from '@/components/ads/ScriptAdFrame';
 
 function getConfig(slot: 1 | 2) {
   if (slot === 2) {
@@ -42,21 +43,11 @@ export function AdSlot({ slot = 1 }: { slot?: 1 | 2 }) {
     );
   }
 
-  // スクリプト型広告（忍者AdMax等）は iframe 内で隔離実行
-  const srcDoc = `<!doctype html><html><head><meta charset="utf-8"><base target="_blank"><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body{margin:0;padding:0;height:100%;display:flex;align-items:center;justify-content:center;background:transparent;overflow:hidden}img{max-width:100%;height:auto}</style></head><body>${html}</body></html>`;
-
+  // スクリプト型広告（忍者AdMax等）は同一オリジンのフレンドリーiframeで実行
   return (
     <div className="flex flex-col items-center gap-1">
       <span className="text-[10px] tracking-widest text-muted/70">広告</span>
-      <iframe
-        title="広告"
-        srcDoc={srcDoc}
-        loading="lazy"
-        scrolling="no"
-        sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox allow-top-navigation-by-user-activation"
-        style={{ width, maxWidth: '100%', height, border: 0, display: 'block' }}
-        className="rounded-xl"
-      />
+      <ScriptAdFrame html={html} width={width} height={height} />
     </div>
   );
 }
