@@ -107,11 +107,13 @@ export default async function GuidePage({
       <header className="space-y-3">
         <h1 className="text-2xl font-semibold tracking-tight">{guide.heading}</h1>
         <p className="text-sm leading-relaxed text-muted">{guide.intro}</p>
-        <p className="text-sm">
-          <Link href={guide.listHref} className="text-accent hover:text-accent-soft">
-            条件を絞り込んで一覧で見る →
-          </Link>
-        </p>
+        {guide.listHref && (
+          <p className="text-sm">
+            <Link href={guide.listHref} className="text-accent hover:text-accent-soft">
+              条件を絞り込んで一覧で見る →
+            </Link>
+          </p>
+        )}
       </header>
 
       <section className="rounded-2xl border border-border bg-surface/50 p-5">
