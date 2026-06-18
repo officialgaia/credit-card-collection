@@ -1,12 +1,17 @@
 import Link from 'next/link';
 import { getCurrentProfile } from '@/lib/auth';
-import { isPro, PLAN_PRICE_LABEL, FREE_OWNED_LIMIT } from '@/lib/billing';
+import { PLAN_PRICE_LABEL, FREE_OWNED_LIMIT } from '@/lib/billing';
+import { UpgradeButton } from '@/components/billing/UpgradeButton';
 
 export const metadata = { title: '料金プラン — Card Collection' };
 
-export default async function PricingPage() {
-  const profile = await getCurrentProfile();
-  const pro = isPro(profile);
+export default async function PricingPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ success?: string; canceled?: string }>;
+}) {
+  const [profile, sp] = await Promise.all([getCurrentProfile(), searchParams]);
+  const subscribed = !!profile?.is_subscribed;
 
   return (
     <div className="mx-auto max-w-2xl space-y-8">
@@ -16,6 +21,17 @@ export default async function PricingPage() {
           無料でも{FREE_OWNED_LIMIT}枚まで集められます。もっと集めるなら PRO へ。
         </p>
       </div>
+
+      {sp.success && (
+        <p className="rounded-lg border border-accent/40 bg-accent/10 px-4 py-2 text-center text-sm text-accent">
+          ご登録ありがとうございます！反映まで数秒かかる場合があります。
+        </p>
+      )}
+      {sp.canceled && (
+        <p className="rounded-lg border border-border bg-surface/60 px-4 py-2 text-center text-sm text-muted">
+          お手続きはキャンセルされました。
+        </p>
+      )}
 
       <div className="grid gap-4 sm:grid-cols-2">
         {/* 無料プラン */}
@@ -45,19 +61,23 @@ export default async function PricingPage() {
             </ul>
 
             <div className="mt-6">
-              {pro ? (
+              {profile?.is_admin ? (
                 <p className="rounded-md border border-accent/40 bg-accent/10 px-4 py-2.5 text-center text-sm text-accent">
-                  {profile?.is_admin ? '管理者として全機能をご利用中です' : 'PRO をご利用中です'}
+                  管理者として全機能をご利用中です
                 </p>
+              ) : subscribed ? (
+                <div className="space-y-2">
+                  <p className="rounded-md border border-accent/40 bg-accent/10 px-4 py-2.5 text-center text-sm text-accent">
+                    PRO をご利用中です
+                  </p>
+                  <UpgradeButton
+                    mode="portal"
+                    label="サブスクを管理・解約"
+                    className="w-full rounded-md border border-border px-4 py-2 text-sm text-muted transition hover:text-foreground disabled:opacity-60"
+                  />
+                </div>
               ) : profile ? (
-                <button
-                  type="button"
-                  disabled
-                  className="w-full cursor-not-allowed rounded-md bg-accent/60 px-4 py-2.5 text-sm font-semibold text-black/70"
-                  title="決済方法を準備中です"
-                >
-                  アップグレード（決済準備中）
-                </button>
+                <UpgradeButton mode="checkout" label="PRO にアップグレード" />
               ) : (
                 <Link
                   href="/login"
