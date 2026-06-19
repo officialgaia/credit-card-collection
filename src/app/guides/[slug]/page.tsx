@@ -6,6 +6,7 @@ import { getCurrentProfile } from '@/lib/auth';
 import { isPro, shouldShowAds } from '@/lib/billing';
 import { CardTile } from '@/components/card/CardTile';
 import { AdSlot } from '@/components/ads/AdSlot';
+import { ShareButtons } from '@/components/share/ShareButtons';
 import { GUIDES, getGuide } from '@/lib/guides';
 import { cardBadges } from '@/lib/cards/review';
 import { formatYen, formatRate } from '@/lib/cards/style';
@@ -116,6 +117,7 @@ export default async function GuidePage({
             </Link>
           </p>
         )}
+        <ShareButtons title={`${guide.title}｜Card Collection`} />
       </header>
 
       <section className="rounded-2xl border border-border bg-surface/50 p-5">

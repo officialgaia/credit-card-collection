@@ -6,6 +6,7 @@ import { getCurrentProfile } from '@/lib/auth';
 import { CardFace } from '@/components/card/CardFace';
 import { OwnToggle } from '@/components/ownership/OwnToggle';
 import { AdSlot } from '@/components/ads/AdSlot';
+import { ShareButtons } from '@/components/share/ShareButtons';
 import { formatYen, formatRate } from '@/lib/cards/style';
 import { BRAND_LABELS } from '@/lib/types';
 import { shouldShowAds, isPro } from '@/lib/billing';
@@ -136,6 +137,7 @@ export default async function CardDetailPage({
               )}
             </div>
           )}
+          <ShareButtons title={`${card.name}｜Card Collection`} />
           {showAds && <AdSlot slot={2} />}
         </div>
 

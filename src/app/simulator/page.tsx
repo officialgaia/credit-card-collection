@@ -3,6 +3,7 @@ import { getAllCards } from '@/lib/cards/queries';
 import { getCurrentProfile } from '@/lib/auth';
 import { shouldShowAds } from '@/lib/billing';
 import { AdSlot } from '@/components/ads/AdSlot';
+import { ShareButtons } from '@/components/share/ShareButtons';
 import { SimulatorClient } from '@/components/simulator/SimulatorClient';
 
 export const metadata: Metadata = {
@@ -33,6 +34,7 @@ export default async function SimulatorPage() {
         <p className="text-sm text-muted">
           毎月のカード利用額から、各カードで年間に貯まるポイントと「実質お得額」を試算・比較します。
         </p>
+        <ShareButtons title="ポイント還元シミュレーター｜Card Collection" />
       </header>
 
       {showAds && <AdSlot />}
