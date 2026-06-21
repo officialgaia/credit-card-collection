@@ -23,18 +23,17 @@ export default function TokushohoPage() {
       lead="本ページは、特定商取引法に基づき必要な事項を表示するものです。"
     >
       <dl>
-        <Row label="販売事業者">{/* ▼ 事業者名または氏名を記載 */}（事業者名を記載してください）</Row>
-        <Row label="運営統括責任者">（氏名を記載してください）</Row>
+        <Row label="販売事業者">Card Collection</Row>
         <Row label="所在地">
-          （住所を記載してください）
+          ご請求があれば遅滞なく開示いたします。
           <span className="block text-xs text-muted">
-            ※ 個人運営の場合、消費者からの請求があったときに遅滞なく開示します（ご希望に応じて記載）。
+            お問い合わせフォームよりご連絡いただければ、遅滞なく書面または電子メールにて開示します。
           </span>
         </Row>
         <Row label="電話番号">
-          （電話番号を記載してください）
+          ご請求があれば遅滞なく開示いたします。
           <span className="block text-xs text-muted">
-            ※ 消費者からの請求があったときに遅滞なく開示する運用も可能です。
+            お問い合わせフォームよりご連絡いただければ、遅滞なく開示します。
           </span>
         </Row>
         <Row label="お問い合わせ">
@@ -62,7 +61,7 @@ export default function TokushohoPage() {
       </dl>
 
       <p className="rounded-lg border border-border bg-surface/60 p-3 text-xs text-muted">
-        ※ 「（…記載してください）」の箇所は、実際の事業者情報に置き換えてください。所在地・電話番号は、個人の場合「請求に応じて遅滞なく開示」とする運用が認められる場合があります。公開前に内容をご確認ください。
+        ※ 所在地・電話番号は、消費者からのご請求があった場合に遅滞なく開示いたします（特定商取引法に基づく運用）。
       </p>
     </InfoPage>
   );
