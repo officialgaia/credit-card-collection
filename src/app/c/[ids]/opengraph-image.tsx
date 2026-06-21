@@ -56,6 +56,7 @@ export default async function ShareOgImage({ params }: { params: Promise<{ ids: 
               <img
                 key={c.id}
                 src={c.image_url}
+                alt=""
                 width={256}
                 height={161}
                 style={{ width: 256, height: 161, objectFit: 'cover', borderRadius: 12 }}

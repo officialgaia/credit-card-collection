@@ -36,6 +36,12 @@ export async function SiteHeader() {
           >
             試算
           </Link>
+          <Link
+            href="/articles"
+            className="rounded-md px-3 py-1.5 text-muted transition hover:text-foreground"
+          >
+            コラム
+          </Link>
           {profile && (
             <>
               <Link
