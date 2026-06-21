@@ -124,6 +124,10 @@ export default async function RootLayout({
               <a href="/operator" className="text-muted transition hover:text-foreground">
                 運営者情報
               </a>
+              <span className="text-border" aria-hidden="true">/</span>
+              <a href="/tokushoho" className="text-muted transition hover:text-foreground">
+                特定商取引法に基づく表記
+              </a>
             </nav>
             <p className="mt-6 text-xs text-muted">
               当サイトはアフィリエイト広告を利用しています。
