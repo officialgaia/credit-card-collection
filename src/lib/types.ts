@@ -78,4 +78,6 @@ export interface CardWithStatus extends Card {
   // 無料プランで上限を超えてロック中の所有カード（PROで解放）。
   // locked=true のときは ownStatus は 'owned' だが「有効な所有」には数えない。
   locked: boolean;
+  // 所有カードで実際に保有している国際ブランド（ユーザー選択・任意）
+  ownBrand: Brand | null;
 }

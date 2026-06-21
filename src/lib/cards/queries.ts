@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import { getCurrentUser } from '@/lib/auth';
-import type { Card, CardWithStatus, CardStatus } from '@/lib/types';
+import type { Card, CardWithStatus, CardStatus, Brand } from '@/lib/types';
 import { FREE_OWNED_LIMIT } from '@/lib/billing';
 
 // 非PROで上限を超える所有カードの id 集合を返す（古い順に上限まで有効、それ以降ロック）。
@@ -29,15 +29,19 @@ export async function getCardsWithStatus(isPro = false): Promise<CardWithStatus[
   const user = await getCurrentUser();
 
   let statusByCard = new Map<string, CardStatus>();
+  let brandByCard = new Map<string, Brand>();
   let lockedIds = new Set<string>();
   if (user) {
     const { data: userCards } = await supabase
       .from('user_cards')
-      .select('card_id, status, created_at')
+      .select('card_id, status, created_at, brand')
       .eq('user_id', user.id);
 
     const rows = userCards ?? [];
     statusByCard = new Map(rows.map((uc) => [uc.card_id as string, uc.status as CardStatus]));
+    brandByCard = new Map(
+      rows.filter((uc) => uc.brand).map((uc) => [uc.card_id as string, uc.brand as Brand])
+    );
     const owned = rows
       .filter((uc) => uc.status === 'owned')
       .map((uc) => ({ card_id: uc.card_id as string, created_at: uc.created_at as string }));
@@ -48,6 +52,7 @@ export async function getCardsWithStatus(isPro = false): Promise<CardWithStatus[
     ...card,
     ownStatus: statusByCard.get(card.id) ?? null,
     locked: lockedIds.has(card.id),
+    ownBrand: brandByCard.get(card.id) ?? null,
   }));
 }
 
@@ -95,14 +100,16 @@ export async function getCardBySlug(slug: string, isPro = false): Promise<CardWi
 
   let ownStatus: CardStatus | null = null;
   let locked = false;
+  let ownBrand: Brand | null = null;
   if (user) {
     const { data: uc } = await supabase
       .from('user_cards')
-      .select('status')
+      .select('status, brand')
       .eq('user_id', user.id)
       .eq('card_id', (card as Card).id)
       .maybeSingle();
     ownStatus = (uc?.status as CardStatus) ?? null;
+    ownBrand = (uc?.brand as Brand) ?? null;
 
     if (ownStatus === 'owned' && !isPro) {
       // この所有カードがロック対象（上限超過の新しい側）かを判定
@@ -118,5 +125,5 @@ export async function getCardBySlug(slug: string, isPro = false): Promise<CardWi
     }
   }
 
-  return { ...(card as Card), ownStatus, locked };
+  return { ...(card as Card), ownStatus, locked, ownBrand };
 }

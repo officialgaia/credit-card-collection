@@ -3,6 +3,7 @@ import { getCurrentProfile } from '@/lib/auth';
 import { signout } from '@/app/auth/actions';
 import { isPro } from '@/lib/billing';
 import { SignOutButton } from '@/components/auth/SignOutButton';
+import { MoreMenu } from '@/components/layout/MoreMenu';
 
 export async function SiteHeader() {
   const profile = await getCurrentProfile();
@@ -24,24 +25,7 @@ export async function SiteHeader() {
           >
             一覧
           </Link>
-          <Link
-            href="/guides"
-            className="rounded-md px-3 py-1.5 text-muted transition hover:text-foreground"
-          >
-            特集
-          </Link>
-          <Link
-            href="/simulator"
-            className="rounded-md px-3 py-1.5 text-muted transition hover:text-foreground"
-          >
-            試算
-          </Link>
-          <Link
-            href="/articles"
-            className="rounded-md px-3 py-1.5 text-muted transition hover:text-foreground"
-          >
-            コラム
-          </Link>
+          <MoreMenu />
           {profile && (
             <>
               <Link

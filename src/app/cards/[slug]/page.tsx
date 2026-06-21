@@ -5,6 +5,7 @@ import { getCardBySlug } from '@/lib/cards/queries';
 import { getCurrentProfile } from '@/lib/auth';
 import { CardFace } from '@/components/card/CardFace';
 import { OwnToggle } from '@/components/ownership/OwnToggle';
+import { BrandSelect } from '@/components/ownership/BrandSelect';
 import { AdSlot } from '@/components/ads/AdSlot';
 import { ShareButtons } from '@/components/share/ShareButtons';
 import { formatYen, formatRate } from '@/lib/cards/style';
@@ -106,7 +107,12 @@ export default async function CardDetailPage({
               🔒 ロック中 — PROで解放
             </Link>
           ) : user ? (
-            <OwnToggle cardId={card.id} initialStatus={card.ownStatus} />
+            <>
+              <OwnToggle cardId={card.id} initialStatus={card.ownStatus} />
+              {owned && (
+                <BrandSelect cardId={card.id} brands={card.brands} initial={card.ownBrand} />
+              )}
+            </>
           ) : (
             <Link
               href="/login"

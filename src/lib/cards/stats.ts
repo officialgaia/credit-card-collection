@@ -78,12 +78,15 @@ export function computeCollectionStats(cards: CardWithStatus[]): CollectionStats
     total: cards.filter((c) => c.tier === tier).length,
   }));
 
+  // ブランド別保有は「ユーザーが選択した決済ブランド」のみ集計する
   const byBrand = BRANDS.map((brand) => ({
     brand,
-    count: owned.filter((c) => c.brands.includes(brand)).length,
+    count: owned.filter((c) => c.ownBrand === brand).length,
   })).filter((b) => b.count > 0);
 
-  const ownedBrandSet = new Set(owned.flatMap((c) => c.brands));
+  const ownedBrandSet = new Set(
+    owned.map((c) => c.ownBrand).filter((b): b is Brand => b != null)
+  );
   const majorBrands: Brand[] = ['visa', 'mastercard', 'jcb', 'amex'];
 
   const achievements: Achievement[] = [

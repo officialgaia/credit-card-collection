@@ -2,8 +2,28 @@
 
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
-import type { CardStatus, Profile } from '@/lib/types';
+import type { CardStatus, Profile, Brand } from '@/lib/types';
 import { isPro, FREE_OWNED_LIMIT, FREE_OWNED_NUDGE_AT } from '@/lib/billing';
+
+// 所有カードで実際に保有する国際ブランドを設定（null で解除）。本人のみ。
+export async function setCardBrand(cardId: string, brand: Brand | null) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: 'ログインが必要です' };
+
+  const { error } = await supabase
+    .from('user_cards')
+    .update({ brand })
+    .eq('user_id', user.id)
+    .eq('card_id', cardId);
+  if (error) return { error: error.message };
+
+  revalidatePath('/');
+  revalidatePath('/collection');
+  return { error: null };
+}
 
 type Result = {
   error: string | null;
