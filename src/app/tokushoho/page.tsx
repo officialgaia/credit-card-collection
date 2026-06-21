@@ -23,7 +23,9 @@ export default function TokushohoPage() {
       lead="本ページは、特定商取引法に基づき必要な事項を表示するものです。"
     >
       <dl>
-        <Row label="販売事業者">Card Collection</Row>
+        <Row label="販売事業者">
+          Card Collection（運営者名はご請求があれば遅滞なく開示いたします）
+        </Row>
         <Row label="所在地">
           ご請求があれば遅滞なく開示いたします。
           <span className="block text-xs text-muted">
