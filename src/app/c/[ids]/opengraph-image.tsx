@@ -50,30 +50,42 @@ export default async function ShareOgImage({ params }: { params: Promise<{ ids: 
         </div>
 
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16, marginTop: 28 }}>
-          {cards.map((c) => (
-            <div
-              key={c.id}
-              style={{
-                width: 256,
-                height: 140,
-                borderRadius: 12,
-                padding: 14,
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                background: TIER_BG[c.tier],
-                color: TIER_TEXT[c.tier],
-              }}
-            >
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 14 }}>
-                <span>{c.tier}</span>
-                <div style={{ width: 28, height: 20, borderRadius: 4, background: 'rgba(220,190,110,0.9)', display: 'flex' }} />
+          {cards.map((c) =>
+            c.image_url ? (
+              // 実際のカード画像を表示
+              <img
+                key={c.id}
+                src={c.image_url}
+                width={256}
+                height={161}
+                style={{ width: 256, height: 161, objectFit: 'cover', borderRadius: 12 }}
+              />
+            ) : (
+              // 画像未登録はランク色のプレースホルダー
+              <div
+                key={c.id}
+                style={{
+                  width: 256,
+                  height: 161,
+                  borderRadius: 12,
+                  padding: 14,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
+                  background: TIER_BG[c.tier],
+                  color: TIER_TEXT[c.tier],
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 14 }}>
+                  <span>{c.tier}</span>
+                  <div style={{ width: 28, height: 20, borderRadius: 4, background: 'rgba(220,190,110,0.9)', display: 'flex' }} />
+                </div>
+                <div style={{ display: 'flex', fontSize: 18, fontWeight: 700, lineHeight: 1.2 }}>
+                  {c.name.length > 22 ? c.name.slice(0, 22) + '…' : c.name}
+                </div>
               </div>
-              <div style={{ display: 'flex', fontSize: 18, fontWeight: 700, lineHeight: 1.2 }}>
-                {c.name.length > 22 ? c.name.slice(0, 22) + '…' : c.name}
-              </div>
-            </div>
-          ))}
+            )
+          )}
         </div>
       </div>
     ),
