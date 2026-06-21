@@ -62,6 +62,16 @@ export async function getAllCards(): Promise<Card[]> {
   return (data ?? []) as Card[];
 }
 
+// 公開シェア用: slug の配列でカードを取得し、入力順を保つ
+export async function getCardsBySlugs(slugs: string[]): Promise<Card[]> {
+  if (slugs.length === 0) return [];
+  const supabase = await createClient();
+  const { data } = await supabase.from('cards').select('*').in('slug', slugs);
+  const list = (data ?? []) as Card[];
+  const order = new Map(slugs.map((s, i) => [s, i]));
+  return list.sort((a, b) => (order.get(a.slug) ?? 0) - (order.get(b.slug) ?? 0));
+}
+
 // 管理画面用: id で1枚取得
 export async function getCardById(id: string): Promise<Card | null> {
   const supabase = await createClient();

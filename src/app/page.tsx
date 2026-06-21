@@ -68,7 +68,7 @@ export default async function HomePage({
         />
       </Suspense>
 
-      {showAds && <AdSlot />}
+      {showAds && <AdSlot slot={2} />}
 
       {visible.length === 0 ? (
         <p className="rounded-xl border border-border bg-surface/60 p-8 text-center text-muted">
@@ -81,9 +81,10 @@ export default async function HomePage({
           {visible.map((card, i) => (
             <Fragment key={card.id}>
               <CardTile card={card} isLoggedIn={isLoggedIn} />
-              {showAds && (i + 1) % 50 === 0 && i < visible.length - 1 && (
+              {showAds && (i + 1) % 24 === 0 && i < visible.length - 1 && (
                 <div className="col-span-full py-2">
-                  <AdSlot slot={((i + 1) / 50) % 2 === 1 ? 2 : 1} />
+                  {/* 3回に1回だけA8(slot1)、それ以外は忍者AdMax(slot2)を表示 */}
+                  <AdSlot slot={((i + 1) / 24) % 3 === 0 ? 1 : 2} />
                 </div>
               )}
             </Fragment>

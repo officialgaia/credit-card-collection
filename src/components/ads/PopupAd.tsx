@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { AdSlot } from '@/components/ads/AdSlot';
 
-const HAS_AD = !!process.env.NEXT_PUBLIC_AD_HTML;
+const HAS_AD = !!(process.env.NEXT_PUBLIC_AD_HTML_2 || process.env.NEXT_PUBLIC_AD_HTML);
 // 表示確率（毎回ではなくランダムに。0〜1）
 const PROBABILITY = 0.5;
 
@@ -46,7 +46,7 @@ export function PopupAd() {
         >
           ✕
         </button>
-        <AdSlot />
+        <AdSlot slot={2} />
         <div className="mt-3 text-center">
           <Link
             href="/pricing"

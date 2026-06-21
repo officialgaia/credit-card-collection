@@ -8,7 +8,8 @@ import { StatsDashboard } from '@/components/collection/StatsDashboard';
 import { SearchBox } from '@/components/filter/SearchBox';
 import { computeCollectionStats } from '@/lib/cards/stats';
 import { cardMatchesQuery } from '@/lib/cards/search';
-import { isPro } from '@/lib/billing';
+import { isPro, shouldShowAds } from '@/lib/billing';
+import { AdSlot } from '@/components/ads/AdSlot';
 import type { CardWithStatus } from '@/lib/types';
 
 export const metadata = { title: 'マイコレクション', robots: { index: false } };
@@ -51,6 +52,8 @@ export default async function CollectionPage({
       <h1 className="text-2xl font-semibold tracking-tight">マイコレクション</h1>
 
       <StatsDashboard stats={stats} />
+
+      {shouldShowAds(profile) && <AdSlot slot={2} />}
 
       {(ownedAll.length > 0 || wantAll.length > 0) && (
         <Suspense fallback={null}>

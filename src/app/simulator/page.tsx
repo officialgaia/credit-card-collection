@@ -37,9 +37,11 @@ export default async function SimulatorPage() {
         <ShareButtons title="ポイント還元シミュレーター｜Card Collection" />
       </header>
 
-      {showAds && <AdSlot />}
+      {showAds && <AdSlot slot={2} />}
 
       <SimulatorClient cards={simCards} />
+
+      {showAds && <AdSlot slot={1} />}
     </div>
   );
 }

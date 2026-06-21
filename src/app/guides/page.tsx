@@ -26,7 +26,7 @@ export default async function GuidesPage() {
         </p>
       </header>
 
-      {showAds && <AdSlot />}
+      {showAds && <AdSlot slot={2} />}
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {GUIDES.map((g) => {

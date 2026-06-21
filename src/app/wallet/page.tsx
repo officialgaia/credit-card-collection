@@ -3,10 +3,13 @@ import { redirect } from 'next/navigation';
 import { getCardsWithStatus } from '@/lib/cards/queries';
 import { getCurrentProfile } from '@/lib/auth';
 import { WalletStack } from '@/components/wallet/WalletStack';
+import { ShareButtons } from '@/components/share/ShareButtons';
 import { formatYen } from '@/lib/cards/style';
 import { isPro } from '@/lib/billing';
 
 export const metadata = { title: 'マイ財布', robots: { index: false } };
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://credit-card-collection.vercel.app';
 
 export default async function WalletPage() {
   const profile = await getCurrentProfile();
@@ -19,6 +22,10 @@ export default async function WalletPage() {
     .sort((a, b) => b.annual_fee - a.annual_fee);
 
   const totalAnnualFee = owned.reduce((s, c) => s + c.annual_fee, 0);
+
+  // シェア用URL（並べて表示する公開ページ /c/[ids]）。URLが長くなりすぎないよう最大40枚。
+  const shareIds = owned.slice(0, 40).map((c) => c.slug).join(',');
+  const shareUrl = `${siteUrl}/c/${encodeURIComponent(shareIds)}`;
 
   return (
     <div className="space-y-6">
@@ -45,7 +52,19 @@ export default async function WalletPage() {
           </Link>
         </p>
       ) : (
-        <WalletStack cards={owned} />
+        <>
+          <WalletStack cards={owned} />
+
+          <div className="rounded-2xl border border-border bg-surface/60 p-4">
+            <p className="mb-2 text-sm">
+              コレクションをシェアしよう（共有ページではカードが並べて表示されます）
+            </p>
+            <ShareButtons
+              title={`私のクレジットカードコレクション（${owned.length}枚）｜Card Collection`}
+              url={shareUrl}
+            />
+          </div>
+        </>
       )}
     </div>
   );
