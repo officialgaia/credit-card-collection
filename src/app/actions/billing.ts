@@ -28,34 +28,51 @@ export async function createCheckout(): Promise<LinkResult> {
     return { error: '決済の設定が未完了です（STRIPE_SECRET_KEY）' };
   }
 
-  const admin = createAdminClient();
-  const { data: profile } = await admin
-    .from('profiles')
-    .select('stripe_customer_id')
-    .eq('id', user.id)
-    .single();
+  try {
+    const admin = createAdminClient();
+    const { data: profile } = await admin
+      .from('profiles')
+      .select('stripe_customer_id')
+      .eq('id', user.id)
+      .single();
 
-  let customerId = profile?.stripe_customer_id as string | undefined;
-  if (!customerId) {
-    const customer = await stripe.customers.create({
-      email: user.email ?? undefined,
-      metadata: { supabase_user_id: user.id },
+    let customerId = profile?.stripe_customer_id as string | undefined;
+
+    // 既存の顧客IDがテスト/別アカウントのもので本番に存在しない場合に備え、存在確認する
+    if (customerId) {
+      try {
+        const existing = await stripe.customers.retrieve(customerId);
+        if ((existing as { deleted?: boolean }).deleted) customerId = undefined;
+      } catch {
+        customerId = undefined; // 本番アカウントに存在しない顧客ID → 作り直す
+      }
+    }
+
+    if (!customerId) {
+      const customer = await stripe.customers.create({
+        email: user.email ?? undefined,
+        metadata: { supabase_user_id: user.id },
+      });
+      customerId = customer.id;
+      await admin.from('profiles').update({ stripe_customer_id: customerId }).eq('id', user.id);
+    }
+
+    const session = await stripe.checkout.sessions.create({
+      mode: 'subscription',
+      customer: customerId,
+      line_items: [{ price: priceId, quantity: 1 }],
+      client_reference_id: user.id,
+      success_url: `${siteUrl()}/pricing?success=1`,
+      cancel_url: `${siteUrl()}/pricing?canceled=1`,
+      allow_promotion_codes: true,
     });
-    customerId = customer.id;
-    await admin.from('profiles').update({ stripe_customer_id: customerId }).eq('id', user.id);
+
+    return { url: session.url ?? undefined };
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : '決済の開始に失敗しました';
+    console.error('createCheckout error:', msg);
+    return { error: msg };
   }
-
-  const session = await stripe.checkout.sessions.create({
-    mode: 'subscription',
-    customer: customerId,
-    line_items: [{ price: priceId, quantity: 1 }],
-    client_reference_id: user.id,
-    success_url: `${siteUrl()}/pricing?success=1`,
-    cancel_url: `${siteUrl()}/pricing?canceled=1`,
-    allow_promotion_codes: true,
-  });
-
-  return { url: session.url ?? undefined };
 }
 
 // サブスク管理（解約・支払い方法変更）用のカスタマーポータルURLを返す。

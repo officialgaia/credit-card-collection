@@ -20,12 +20,16 @@ export function UpgradeButton({
   async function go() {
     setLoading(true);
     setError(null);
-    const res = mode === 'checkout' ? await createCheckout() : await createPortal();
-    if (res.url) {
-      window.location.href = res.url;
-      return;
+    try {
+      const res = mode === 'checkout' ? await createCheckout() : await createPortal();
+      if (res.url) {
+        window.location.href = res.url;
+        return;
+      }
+      setError(res.error ?? 'エラーが発生しました');
+    } catch (e) {
+      setError(e instanceof Error ? e.message : '通信エラーが発生しました');
     }
-    setError(res.error ?? 'エラーが発生しました');
     setLoading(false);
   }
 
