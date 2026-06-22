@@ -92,7 +92,8 @@ export default async function PricingPage({
       </div>
 
       <p className="rounded-lg border border-border bg-surface/60 p-3 text-center text-xs text-muted">
-        ※ クレジットカード決済を準備中です。導入後、このページからご登録いただけます。
+        ※ 月額自動更新です。いつでも「サブスクを管理・解約」から解約でき、解約後も期間満了まではご利用いただけます。
+        決済は Stripe を利用し、カード情報は当サイトでは保持しません。
       </p>
     </div>
   );
