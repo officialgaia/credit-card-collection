@@ -37,11 +37,6 @@ yarn-error.log*
 # vercel
 .vercel
 
-# firebase (サークル機関誌アプリ用)
-.firebaserc
-.firebase/
-firebase-debug.log
-
 # typescript
 *.tsbuildinfo
 next-env.d.ts
