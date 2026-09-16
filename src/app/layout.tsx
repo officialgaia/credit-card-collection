@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
 import { SiteHeader } from "@/components/layout/SiteHeader";
+import { SiteChrome } from "@/components/layout/SiteChrome";
 import { PopupAd } from "@/components/ads/PopupAd";
 import { getCurrentProfile } from "@/lib/auth";
 import { shouldShowAds } from "@/lib/billing";
@@ -100,44 +101,49 @@ export default async function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
         />
-        <SiteHeader />
-        <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">{children}</main>
-        <footer className="mt-10 border-t border-border">
-          <div className="mx-auto max-w-6xl px-4 py-10 text-center">
-            <nav className="flex flex-wrap items-center justify-center gap-x-4 gap-y-3 text-sm">
-              <a href="/faq" className="text-muted transition hover:text-foreground">
-                よくある質問
-              </a>
-              <span className="text-border" aria-hidden="true">/</span>
-              <a href="/terms" className="text-muted transition hover:text-foreground">
-                利用規約
-              </a>
-              <span className="text-border" aria-hidden="true">/</span>
-              <a href="/privacy" className="text-muted transition hover:text-foreground">
-                個人情報保護方針
-              </a>
-              <span className="text-border" aria-hidden="true">/</span>
-              <a href="/contact" className="text-muted transition hover:text-foreground">
-                お問い合わせ
-              </a>
-              <span className="text-border" aria-hidden="true">/</span>
-              <a href="/operator" className="text-muted transition hover:text-foreground">
-                運営者情報
-              </a>
-              <span className="text-border" aria-hidden="true">/</span>
-              <a href="/tokushoho" className="text-muted transition hover:text-foreground">
-                特定商取引法に基づく表記
-              </a>
-            </nav>
-            <p className="mt-6 text-xs text-muted">
-              当サイトはアフィリエイト広告を利用しています。
-            </p>
-            <p className="mt-2 text-xs text-muted">
-              Card Collection · 掲載情報は2026年6月時点の参考値です。最新・正確な条件は各公式サイトでご確認ください
-            </p>
-          </div>
-        </footer>
-        {showAds && <PopupAd />}
+        <SiteChrome
+          header={<SiteHeader />}
+          popupAd={showAds && <PopupAd />}
+          footer={
+            <footer className="mt-10 border-t border-border">
+              <div className="mx-auto max-w-6xl px-4 py-10 text-center">
+                <nav className="flex flex-wrap items-center justify-center gap-x-4 gap-y-3 text-sm">
+                  <a href="/faq" className="text-muted transition hover:text-foreground">
+                    よくある質問
+                  </a>
+                  <span className="text-border" aria-hidden="true">/</span>
+                  <a href="/terms" className="text-muted transition hover:text-foreground">
+                    利用規約
+                  </a>
+                  <span className="text-border" aria-hidden="true">/</span>
+                  <a href="/privacy" className="text-muted transition hover:text-foreground">
+                    個人情報保護方針
+                  </a>
+                  <span className="text-border" aria-hidden="true">/</span>
+                  <a href="/contact" className="text-muted transition hover:text-foreground">
+                    お問い合わせ
+                  </a>
+                  <span className="text-border" aria-hidden="true">/</span>
+                  <a href="/operator" className="text-muted transition hover:text-foreground">
+                    運営者情報
+                  </a>
+                  <span className="text-border" aria-hidden="true">/</span>
+                  <a href="/tokushoho" className="text-muted transition hover:text-foreground">
+                    特定商取引法に基づく表記
+                  </a>
+                </nav>
+                <p className="mt-6 text-xs text-muted">
+                  当サイトはアフィリエイト広告を利用しています。
+                </p>
+                <p className="mt-2 text-xs text-muted">
+                  Card Collection · 掲載情報は2026年6月時点の参考値です。最新・正確な条件は各公式サイトでご確認ください
+                </p>
+              </div>
+            </footer>
+          }
+        >
+          {children}
+        </SiteChrome>
         <Analytics />
       </body>
     </html>
