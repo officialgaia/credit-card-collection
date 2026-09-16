@@ -1,0 +1,170 @@
+/* サークル機関誌アプリ専用のスタイル。
+   既存サイトの黒基調・ゴールドテーマとは独立させ、
+   印刷物らしい落ち着いた誌面を狙う。 */
+
+.magazine-scope {
+  --mag-bg: #f6f4ee;
+  --mag-surface: #fffdf9;
+  --mag-border: #ded7c6;
+  --mag-text: #262218;
+  --mag-muted: #736c5c;
+  --mag-line: #b9b09a;
+  --mag-accent: #5b5340;
+  --mag-accent-soft: #8a8168;
+  --mag-status-open: #4c5a45;
+  --mag-status-editing: #7a5a2f;
+  --mag-status-published: #3a4a63;
+
+  background: var(--mag-bg);
+  color: var(--mag-text);
+  min-height: 100vh;
+  font-family: var(--font-mag-sans, -apple-system, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif);
+}
+
+.magazine-scope h1,
+.magazine-scope h2,
+.magazine-scope h3 {
+  font-family: var(--font-mag-serif, "Hiragino Mincho ProN", serif);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.mag-container {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+.mag-header {
+  border-bottom: 1px solid var(--mag-border);
+  background: var(--mag-surface);
+}
+
+.mag-header-inner {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 1.1rem 1.25rem;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.mag-title {
+  font-family: var(--font-mag-serif, "Hiragino Mincho ProN", serif);
+  font-size: 1.15rem;
+  letter-spacing: 0.06em;
+}
+
+.mag-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+  font-size: 0.85rem;
+}
+
+.mag-nav a {
+  color: var(--mag-muted);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+}
+
+.mag-nav a:hover,
+.mag-nav a[data-active="true"] {
+  color: var(--mag-text);
+  border-bottom-color: var(--mag-line);
+}
+
+.mag-card {
+  background: var(--mag-surface);
+  border: 1px solid var(--mag-border);
+  padding: 1.25rem;
+}
+
+.mag-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1px solid var(--mag-text);
+  background: var(--mag-text);
+  color: var(--mag-bg);
+  padding: 0.5rem 1.1rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.mag-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.mag-button-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1px solid var(--mag-line);
+  background: transparent;
+  color: var(--mag-text);
+  padding: 0.45rem 1rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.mag-button-outline:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.mag-input {
+  border: 1px solid var(--mag-line);
+  background: var(--mag-surface);
+  color: var(--mag-text);
+  padding: 0.5rem 0.6rem;
+  font-size: 0.9rem;
+  width: 100%;
+}
+
+.mag-label {
+  font-size: 0.78rem;
+  color: var(--mag-muted);
+  letter-spacing: 0.04em;
+}
+
+.mag-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.mag-table th,
+.mag-table td {
+  border-bottom: 1px solid var(--mag-border);
+  padding: 0.6rem 0.5rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.mag-status {
+  display: inline-block;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  padding: 0.15rem 0.55rem;
+  border: 1px solid currentColor;
+}
+
+.mag-status[data-status="受付中"] {
+  color: var(--mag-status-open);
+}
+
+.mag-status[data-status="編集中"] {
+  color: var(--mag-status-editing);
+}
+
+.mag-status[data-status="公開"] {
+  color: var(--mag-status-published);
+}
+
+.mag-muted {
+  color: var(--mag-muted);
+}
