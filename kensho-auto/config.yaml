@@ -1,0 +1,26 @@
+# kensho-auto の動作設定
+apply:
+  # 1回の実行で応募する最大件数
+  maxPerRun: 10
+  # 応募と応募の間隔（秒）。この範囲でランダムに待つ
+  minIntervalSec: 5
+  maxIntervalSec: 30
+  # 送信前に失敗したものを再試行する上限回数（送信ボタンを押した後の失敗は再試行しない）
+  maxAttempts: 2
+  navigationTimeoutSec: 30
+
+collect:
+  enabled: true
+  # 1つの収集元から1回に追加する最大件数
+  maxNewPerSource: 30
+  # 収集元へのリクエスト間隔（秒）
+  requestIntervalSec: 2
+
+x:
+  # Xのフォロー＆リポスト型キャンペーンを自動処理するか（初期値 false）
+  enabled: false
+  # 1日（日本時間）に処理する最大件数
+  dailyLimit: 10
+  # 処理の間隔（秒）
+  minIntervalSec: 90
+  maxIntervalSec: 240

@@ -1,0 +1,4 @@
+node_modules/
+artifacts/
+profile.local.json
+.env

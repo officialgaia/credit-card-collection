@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><title>秋の大感謝プレゼントキャンペーン 応募フォーム</title></head>
+<body>
+<h1>秋の大感謝プレゼントキャンペーン</h1>
+<p>以下のフォームに必要事項をご入力のうえ、ご応募ください。<span>※</span>は必須項目です。</p>
+<form action="confirm.html" method="get">
+  <div class="row">
+    <label>お名前<span>※</span></label>
+    <input type="text" name="sei" placeholder="山田" required>
+    <input type="text" name="mei" placeholder="太郎" required>
+  </div>
+  <div class="row">
+    <label>フリガナ<span>※</span></label>
+    <input type="text" name="sei_kana" placeholder="ヤマダ" required>
+    <input type="text" name="mei_kana" placeholder="タロウ" required>
+  </div>
+  <div class="row">
+    <label for="zip1">郵便番号<span>※</span></label>
+    〒<input type="text" id="zip1" name="zip1" maxlength="3" size="3" required> -
+    <input type="text" name="zip2" maxlength="4" size="4" required>
+  </div>
+  <div class="row">
+    <label for="pref">都道府県<span>※</span></label>
+    <select id="pref" name="pref" required>
+      <option value="">選択してください</option>
+      <option value="1">北海道</option><option value="13">東京都</option><option value="27">大阪府</option>
+    </select>
+  </div>
+  <div class="row"><label for="city">市区町村<span>※</span></label><input type="text" id="city" name="city" required></div>
+  <div class="row"><label for="addr">番地<span>※</span></label><input type="text" id="addr" name="address2" required></div>
+  <div class="row"><label for="bld">建物名・部屋番号</label><input type="text" id="bld" name="building"></div>
+  <div class="row">
+    <label>電話番号<span>※</span></label>
+    <input type="tel" name="tel1" maxlength="4" required>-<input type="tel" name="tel2" maxlength="4" required>-<input type="tel" name="tel3" maxlength="4" required>
+  </div>
+  <div class="row"><label for="email">メールアドレス<span>※</span></label><input type="email" id="email" name="email" required></div>
+  <div class="row"><label for="email2">メールアドレス（確認用）<span>※</span></label><input type="email" id="email2" name="email_confirm" required></div>
+  <div class="row">
+    <label>生年月日<span>※</span></label>
+    <select name="birth_year" required><option value="">----</option><option>1989</option><option>1990</option><option>1991</option></select>年
+    <select name="birth_month" required><option value="">--</option><option value="01">1</option><option value="04">4</option><option value="12">12</option></select>月
+    <select name="birth_day" required><option value="">--</option><option value="01">1</option><option value="15">15</option><option value="31">31</option></select>日
+  </div>
+  <fieldset>
+    <legend>性別<span>※</span></legend>
+    <label><input type="radio" name="gender" value="1" required>男性</label>
+    <label><input type="radio" name="gender" value="2">女性</label>
+    <label><input type="radio" name="gender" value="3">回答しない</label>
+  </fieldset>
+  <fieldset>
+    <legend>このキャンペーンを何で知りましたか？</legend>
+    <label><input type="radio" name="q1" value="tv">テレビ</label>
+    <label><input type="radio" name="q1" value="web">Webサイト</label>
+    <label><input type="radio" name="q1" value="other">その他</label>
+  </fieldset>
+  <div class="row">
+    <label><input type="checkbox" name="agree" value="1" required>応募規約・個人情報の取り扱いに同意する</label>
+  </div>
+  <div class="row">
+    <label><input type="checkbox" name="mailmag" value="1">メールマガジンの配信を希望する</label>
+  </div>
+  <button type="button">リセット</button>
+  <button type="submit">入力内容を確認する</button>
+</form>
+</body></html>

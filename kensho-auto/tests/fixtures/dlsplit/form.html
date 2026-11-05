@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><title>Win a Prize! 冬のキャンペーン</title></head>
+<body>
+<div id="app">
+<form id="entry">
+<dl>
+  <dt>お名前（全角）</dt><dd><input type="text" name="name1" required><input type="text" name="name2" required></dd>
+  <dt>お名前（全角カナ）</dt><dd><input type="text" name="kana1" required><input type="text" name="kana2" required></dd>
+  <dt>郵便番号</dt><dd><input type="text" name="postcode1" required> - <input type="text" name="postcode2" required></dd>
+  <dt>都道府県</dt><dd><select name="todofuken" required><option value="">選択</option><option value="pref13">東京</option><option value="pref27">大阪</option></select></dd>
+  <dt>住所</dt><dd><input type="text" name="jusho" required></dd>
+  <dt>携帯電話番号</dt><dd><input type="text" name="phone_a" required>-<input type="text" name="phone_b" required>-<input type="text" name="phone_c" required></dd>
+  <dt>E-mail</dt><dd><input type="text" name="mail" required></dd>
+  <dt>生年月日</dt><dd>
+    <select name="b1" required><option value="">-</option><option value="1990">平成2年(1990)</option><option value="1991">平成3年(1991)</option></select>
+    <select name="b2" required><option value="">-</option><option>3</option><option>4</option><option>5</option></select>
+    <select name="b3" required><option value="">-</option><option>14</option><option>15</option><option>16</option></select>
+  </dd>
+  <dt>性別</dt><dd><select name="gender" required><option value="">選択</option><option value="f">女性</option><option value="m">男性</option></select></dd>
+  <dt>好きな季節（いくつでも）<span>必須</span></dt><dd>
+    <label><input type="checkbox" name="season[]" value="spring">春</label>
+    <label><input type="checkbox" name="season[]" value="summer">夏</label>
+  </dd>
+  <dt>お知らせ</dt><dd><label><input type="checkbox" name="news" value="1">新商品のお知らせを受け取る</label></dd>
+  <dd><label><input type="checkbox" name="policy" value="1" required>プライバシーポリシーに同意する</label></dd>
+</dl>
+<p id="error" style="color:red"></p>
+<button type="submit">応募する</button>
+</form>
+</div>
+<script>
+document.getElementById('entry').addEventListener('submit', function (e) {
+  e.preventDefault();
+  var f = e.target;
+  if (!f.checkValidity() || !f.querySelector('input[name="season[]"]:checked')) {
+    document.getElementById('error').textContent = '必須項目を入力してください';
+    return;
+  }
+  document.getElementById('app').innerHTML = '<h2>応募を受け付けました</h2><p>抽選結果はメールでお知らせします。</p>';
+});
+</script>
+</body></html>
