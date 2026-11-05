@@ -1,0 +1,9 @@
+{
+  "name": "kensho-auto",
+  "short_name": "懸賞",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f6f7f9",
+  "theme_color": "#0f766e",
+  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}

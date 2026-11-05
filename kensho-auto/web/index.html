@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#0f766e">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src https://api.github.com; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+  <title>kensho-auto</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.webmanifest">
+</head>
+<body>
+  <header class="topbar">
+    <h1>kensho-auto</h1>
+    <div class="topbar-actions">
+      <button id="btn-reload" class="icon-btn" type="button" aria-label="再読み込み" hidden>↻</button>
+      <button id="btn-settings" class="icon-btn" type="button" aria-label="設定" hidden>⚙</button>
+    </div>
+  </header>
+
+  <!-- 初期設定 -->
+  <section id="setup" class="panel" hidden>
+    <h2>初期設定</h2>
+    <p class="muted">GitHub の fine-grained Personal Access Token を使って、非公開リポジトリのデータを直接読み書きします。トークンはこの端末のブラウザ（localStorage）にだけ保存されます。</p>
+    <form id="setup-form" class="stack">
+      <label>オーナー（ユーザー名／組織名）<input name="owner" required autocomplete="off" autocapitalize="off" spellcheck="false"></label>
+      <label>リポジトリ名<input name="repo" required autocomplete="off" autocapitalize="off" spellcheck="false"></label>
+      <label>ブランチ<input name="branch" value="main" required autocomplete="off" autocapitalize="off" spellcheck="false"></label>
+      <label>kensho-auto のディレクトリ<input name="dir" value="kensho-auto" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
+      <label>Personal Access Token<input name="token" type="password" required autocomplete="off" spellcheck="false" placeholder="github_pat_..."></label>
+      <p class="muted small">必要な権限：対象リポジトリのみ / Contents: Read and write / Actions: Read and write / Metadata: Read</p>
+      <div class="row">
+        <button type="submit" class="primary">保存して読み込む</button>
+        <button type="button" id="btn-forget" class="danger" hidden>トークンを削除</button>
+      </div>
+      <p id="setup-error" class="error" role="alert"></p>
+    </form>
+  </section>
+
+  <main id="app" hidden>
+    <section class="stats" id="stats" aria-label="統計"></section>
+
+    <section class="panel run-panel">
+      <div class="row space">
+        <div>
+          <div class="small muted">最終実行</div>
+          <div id="last-run">-</div>
+        </div>
+        <div class="row">
+          <label class="check small"><input type="checkbox" id="run-dry"> dry-run</label>
+          <button id="btn-run" class="primary" type="button">今すぐ実行</button>
+        </div>
+      </div>
+      <ul id="runs" class="runs"></ul>
+    </section>
+
+    <nav class="tabs" id="tabs" role="tablist"></nav>
+
+    <div class="filters">
+      <input id="search" type="search" placeholder="タイトル・URL・賞品で検索" autocomplete="off">
+      <select id="filter-method" aria-label="応募方式">
+        <option value="">全方式</option>
+        <option value="web">Web</option>
+        <option value="x">X</option>
+        <option value="other">その他</option>
+      </select>
+    </div>
+
+    <ul id="list" class="list"></ul>
+    <p id="empty" class="muted center" hidden>該当する懸賞はありません</p>
+
+    <details class="panel" id="add-panel">
+      <summary>URL を手動で追加</summary>
+      <form id="add-form" class="stack">
+        <label>応募ページの URL<input name="url" type="url" required placeholder="https://..." autocomplete="off"></label>
+        <label>タイトル（任意）<input name="title" autocomplete="off"></label>
+        <div class="row">
+          <label class="grow">締切（任意）<input name="deadline" type="date"></label>
+          <label class="grow">方式
+            <select name="method"><option value="auto">自動判定</option><option value="web">Web</option><option value="x">X</option><option value="other">その他</option></select>
+          </label>
+        </div>
+        <label>賞品（任意）<input name="prize" autocomplete="off"></label>
+        <label class="check"><input type="checkbox" name="now"> 追加後すぐにこの URL だけ応募を実行する</label>
+        <button type="submit" class="primary">追加</button>
+        <p id="add-msg" class="small" role="status"></p>
+      </form>
+    </details>
+
+    <details class="panel" id="sources-panel">
+      <summary>収集元のオン／オフ</summary>
+      <ul id="sources" class="sources"></ul>
+      <p class="muted small">収集元の追加・編集は sources.yaml を直接編集してください。</p>
+    </details>
+  </main>
+
+  <div id="toast" class="toast" role="status" hidden></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
