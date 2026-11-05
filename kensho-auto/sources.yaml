@@ -1,0 +1,44 @@
+# 懸賞の収集元
+# Webアプリの「収集元のオン／オフ」は data/settings.json に保存され、ここの enabled より優先されます。
+#
+# type: rss   … RSS / Atom フィード（推奨）
+# type: html  … 一覧ページを CSS セレクタで読む
+#
+# 共通の項目
+#   id                 一意なID（英数字とハイフン）
+#   name               表示名
+#   url                フィード／一覧ページのURL
+#   enabled            true / false
+#   follow             記事ページを開いて懸賞元の応募ページURLまでたどるか（既定 true）
+#   applyLinkSelector  記事ページ内の「応募ページへのリンク」のCSSセレクタ（省略時は自動推定）
+#   method             web / x / other / auto（既定 auto：URLと本文から判定）
+#
+# type: html の項目
+#   itemSelector       1件分の要素
+#   titleSelector      タイトル（省略時はリンクの文字）
+#   linkSelector       リンク（省略時は最初の a）
+#   deadlineSelector   締切の文字（「11/30まで」等を自動で日付にします）
+#   prizeSelector      賞品
+#
+# 注意：収集先サイトの利用規約・robots.txt を守ってください（robots.txt で禁止されたURLは自動でスキップします）。
+
+sources:
+  - id: example-rss
+    name: 懸賞まとめ（RSSの例）
+    type: rss
+    url: https://example.com/feed
+    enabled: false
+    follow: true
+    # applyLinkSelector: ".entry-content a.official"
+
+  - id: example-list
+    name: 懸賞一覧ページ（HTMLの例）
+    type: html
+    url: https://example.com/campaigns
+    enabled: false
+    itemSelector: ".campaign-list > li"
+    titleSelector: ".campaign-title"
+    linkSelector: "a"
+    deadlineSelector: ".campaign-deadline"
+    prizeSelector: ".campaign-prize"
+    follow: true

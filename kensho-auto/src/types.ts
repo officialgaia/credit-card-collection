@@ -13,6 +13,8 @@ export interface Campaign {
   /** 収集元ID、または "manual" */
   source: string;
   addedAt: string;
+  /** 収集元の記事ページURL（応募ページと異なる場合） */
+  via?: string;
 }
 
 export interface Entry {
