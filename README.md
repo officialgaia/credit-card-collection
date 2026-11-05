@@ -133,3 +133,9 @@ npm run lint    # ESLint
 - **フロント**: Vercel にインポートし、環境変数 `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY` を設定。
 - **バックエンド**: Supabase クラウドプロジェクト（上記 B）。
 - 注意: 年会費・還元率などのスペックは公開情報をもとにした**目安**です。正確な条件は管理画面（フェーズ3）から随時補正してください。
+
+---
+
+## kensho-auto（懸賞自動応募）
+
+このリポジトリには、クレジットカードサイトとは独立した懸賞自動応募ツール `kensho-auto/` も含まれています。セットアップ手順は [kensho-auto/README.md](kensho-auto/README.md) を参照してください（Next.js のビルド・lint の対象外、Vercel は `kensho-auto/` だけの変更ではビルドしません）。
