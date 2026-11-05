@@ -23,6 +23,7 @@ const envTrue = (v?: string) => v === "true" || v === "1";
 
 async function main() {
   const config = loadConfig();
+  if (!args.url && process.env.TARGET_URL) args.url = process.env.TARGET_URL.trim();
   const dryRun = args["dry-run"] || envTrue(process.env.DRY_RUN);
   const maxPerRun = Number(args.max ?? process.env.MAX_PER_RUN ?? config.apply.maxPerRun) || config.apply.maxPerRun;
   const { profile, dummy } = loadProfile({ allowDummy: dryRun });

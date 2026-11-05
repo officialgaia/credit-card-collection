@@ -1,0 +1,102 @@
+name: kensho-auto
+
+on:
+  schedule:
+    - cron: "0 22 * * *" # JST 7:00
+    - cron: "0 10 * * *" # JST 19:00
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "dry-run（送信直前で止めてスクショのみ）"
+        type: boolean
+        default: false
+      max_per_run:
+        description: "今回の応募上限件数（空なら config.yaml の値）"
+        type: string
+        default: ""
+      url:
+        description: "この URL だけに応募する（空なら通常実行）"
+        type: string
+        default: ""
+      skip_collect:
+        description: "懸賞の収集をスキップ"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: kensho-auto
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    defaults:
+      run:
+        working-directory: kensho-auto
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: kensho-auto/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Chromium and Japanese fonts
+        run: |
+          npx playwright install --with-deps chromium
+          sudo apt-get install -y --no-install-recommends fonts-noto-cjk >/dev/null
+
+      - name: Collect campaigns
+        if: ${{ !inputs.skip_collect && inputs.url == '' }}
+        continue-on-error: true
+        run: npm run collect
+
+      - name: Apply
+        env:
+          PROFILE_JSON: ${{ secrets.PROFILE_JSON }}
+          X_COOKIES_JSON: ${{ secrets.X_COOKIES_JSON }}
+          DRY_RUN: ${{ inputs.dry_run && 'true' || 'false' }}
+          MAX_PER_RUN: ${{ inputs.max_per_run }}
+          TARGET_URL: ${{ inputs.url }}
+        run: npm run run
+
+      # スクショには個人情報が写るため、リポジトリにはコミットせず artifact（7日で自動削除）にだけ保存する
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: kensho-screenshots-${{ github.run_id }}
+          path: kensho-auto/artifacts/
+          retention-days: 7
+          if-no-files-found: ignore
+
+      - name: Commit data
+        if: ${{ always() && !inputs.dry_run }}
+        run: |
+          git config user.name "kensho-auto[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet -- data && [ -z "$(git ls-files --others --exclude-standard data)" ]; then
+            echo "データの変更なし"; exit 0
+          fi
+          saved="$(mktemp -d)"
+          cp data/*.json "$saved/"
+          branch="${GITHUB_REF_NAME}"
+          for i in 1 2 3 4; do
+            git fetch origin "$branch"
+            git reset --hard "origin/$branch"
+            npx tsx src/cli/mergeData.ts "$saved"
+            git add data/*.json
+            if git diff --cached --quiet; then echo "マージ後の変更なし"; exit 0; fi
+            git commit -m "kensho-auto: データ更新 [skip ci]"
+            if git push origin "HEAD:$branch"; then exit 0; fi
+            sleep $((i * 5))
+          done
+          echo "push に失敗しました"; exit 1
